@@ -6,6 +6,6 @@ C:\Users\Richard LeBlanc\Dropbox\CPSC 4400\Code for studios and projects\project
 C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\bin\Debug\TCCL-AST.exe.config
 C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\bin\Debug\TCCL-AST.exe
 C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\bin\Debug\TCCL-AST.pdb
-C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\obj\Debug\Project2.csprojResolveAssemblyReference.cache
 C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\obj\Debug\TCCL-AST.exe
 C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\obj\Debug\TCCL-AST.pdb
+C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\obj\Debug\Project2.csprojResolveAssemblyReference.cache

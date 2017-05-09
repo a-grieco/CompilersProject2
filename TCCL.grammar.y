@@ -27,32 +27,33 @@
 
 %%
 
-CompilationUnit		:	ClassDeclaration
+CompilationUnit		:	ClassDeclaration	
 					;
 
-ClassDeclaration	:	Modifiers CLASS Identifier ClassBody
+ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDecl($1, $3, $4); Console.WriteLine($$);}
 					;
 
-Modifiers			:	PUBLIC
-					|	PRIVATE
-					|	STATIC
-					|	Modifiers PUBLIC
-					|	Modifiers PRIVATE
-					|	Modifiers STATIC
-					;
-ClassBody			:	LBRACE FieldDeclarations RBRACE
-					|	LBRACE RBRACE
+Modifiers			:	PUBLIC		{ $$ = MakeModifiers(Token.PUBLIC); }
+					|	PRIVATE		{ $$ = MakeModifiers(Token.PRIVATE); }
+					|	STATIC		{ $$ = MakeModifiers(Token.STATIC); }
+					|	Modifiers PUBLIC	{ $$ = MakeModifiers($1, Token.PUBLIC); }
+					|	Modifiers PRIVATE	{ $$ = MakeModifiers($1, Token.PRIVATE); }
+					|	Modifiers STATIC	{ $$ = MakeModifiers($1, Token.STATIC); }
 					;
 
-FieldDeclarations	:	FieldDeclaration
-					|	FieldDeclarations FieldDeclaration
+ClassBody			:	LBRACE FieldDeclarations RBRACE	{ $$ = MakeClassBody($2); }
+					|	LBRACE RBRACE	{ $$ = MakeClassBody(); }
 					;
 
-FieldDeclaration	:	FieldVariableDeclaration SEMICOLON
-					|	MethodDeclaration
-					|	ConstructorDeclaration
-					|	StaticInitializer
-					|	StructDeclaration
+FieldDeclarations	:	FieldDeclaration	{ $$ = MakeFieldDeclarations($1); }
+					|	FieldDeclarations FieldDeclaration { $$ = MakeFieldDeclarations($1, $2); }
+					;
+
+FieldDeclaration	:	FieldVariableDeclaration SEMICOLON	{ $$ = MakeFieldDeclaration($1); }
+					|	MethodDeclaration	{ $$ = MakeFieldDeclaration($1); }
+					|	ConstructorDeclaration	{ $$ = MakeFieldDeclaration($1); }
+					|	StaticInitializer	{ $$ = MakeFieldDeclaration($1); }
+					|	StructDeclaration	{ $$ = MakeFieldDeclaration($1); }
 					;
 
 StructDeclaration	:	Modifiers STRUCT Identifier ClassBody
@@ -252,7 +253,7 @@ SpecialName					:	THIS
 							|	NULL
 							;
 
-Identifier					:	IDENTIFIER
+Identifier					:	IDENTIFIER	{  $$ = MakeIdentifier(yytext); }
 							;
 
 Number						:	INT_NUMBER

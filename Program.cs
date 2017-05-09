@@ -28,7 +28,7 @@ namespace ASTBuilder
                 bool fileIsValid = false;
                 while (!fileIsValid)
                 {
-                    Console.Write("Please enter the file name to parse: ");
+                    Console.Write("Enter the file to parse (or 'quit'): ");
                     fileName = Console.ReadLine();
                     if (!string.IsNullOrEmpty(fileName))
                     {
@@ -68,7 +68,7 @@ namespace ASTBuilder
                 }
             }
 
-            Console.WriteLine("\nExited program. Press any key to close.");
+            Console.WriteLine("\nProgram complete. Press any key to close.");
             Console.ReadKey();
         }
     }

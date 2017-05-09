@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/9/2017 12:20:11 AM
+// DateTime: 5/9/2017 3:39:45 PM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/9/2017 12:20:10 AM>
+// Input file <TCCL.grammar.y - 5/9/2017 3:39:42 PM>
 
 // options: no-lines gplex
 
@@ -375,6 +375,57 @@ internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 #pragma warning disable 162, 1522
     switch (action)
     {
+      case 3: // ClassDeclaration -> Modifiers, CLASS, Identifier, ClassBody
+{ CurrentSemanticValue = MakeClassDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); Console.WriteLine(CurrentSemanticValue);}
+        break;
+      case 4: // Modifiers -> PUBLIC
+{ CurrentSemanticValue = MakeModifiers(Token.PUBLIC); }
+        break;
+      case 5: // Modifiers -> PRIVATE
+{ CurrentSemanticValue = MakeModifiers(Token.PRIVATE); }
+        break;
+      case 6: // Modifiers -> STATIC
+{ CurrentSemanticValue = MakeModifiers(Token.STATIC); }
+        break;
+      case 7: // Modifiers -> Modifiers, PUBLIC
+{ CurrentSemanticValue = MakeModifiers(ValueStack[ValueStack.Depth-2], Token.PUBLIC); }
+        break;
+      case 8: // Modifiers -> Modifiers, PRIVATE
+{ CurrentSemanticValue = MakeModifiers(ValueStack[ValueStack.Depth-2], Token.PRIVATE); }
+        break;
+      case 9: // Modifiers -> Modifiers, STATIC
+{ CurrentSemanticValue = MakeModifiers(ValueStack[ValueStack.Depth-2], Token.STATIC); }
+        break;
+      case 10: // ClassBody -> LBRACE, FieldDeclarations, RBRACE
+{ CurrentSemanticValue = MakeClassBody(ValueStack[ValueStack.Depth-2]); }
+        break;
+      case 11: // ClassBody -> LBRACE, RBRACE
+{ CurrentSemanticValue = MakeClassBody(); }
+        break;
+      case 12: // FieldDeclarations -> FieldDeclaration
+{ CurrentSemanticValue = MakeFieldDeclarations(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 13: // FieldDeclarations -> FieldDeclarations, FieldDeclaration
+{ CurrentSemanticValue = MakeFieldDeclarations(ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 14: // FieldDeclaration -> FieldVariableDeclaration, SEMICOLON
+{ CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-2]); }
+        break;
+      case 15: // FieldDeclaration -> MethodDeclaration
+{ CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 16: // FieldDeclaration -> ConstructorDeclaration
+{ CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 17: // FieldDeclaration -> StaticInitializer
+{ CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 18: // FieldDeclaration -> StructDeclaration
+{ CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 109: // Identifier -> IDENTIFIER
+{  CurrentSemanticValue = MakeIdentifier(yytext); }
+        break;
     }
 #pragma warning restore 162, 1522
   }

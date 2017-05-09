@@ -55,7 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractNodeImpl.cs" />
+    <Compile Include="FactoryMethods.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="GplexBuffers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
