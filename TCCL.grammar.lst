@@ -1,9 +1,30 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <TCCL.grammar.y - 5/9/2017 12:04:45 AM>
+// ==========================================================================
+//  Version:  1.5.2
+//  Machine:  HPERSIMMON
+//  DateTime: 5/9/2017 12:04:46 AM
+//  UserName: amgrieco
+// ==========================================================================
+
+
 %namespace ASTBuilder
 %partial
 %parsertype TCCLParser
 %visibility internal
 %tokentype Token
 %YYSTYPE AbstractNode
+
+
+	return ((TCCLScanner)Scanner).yytext;
+//^^^^^^^^----------^^------^^
+// Error: Syntax error, unexpected ident
+// Error: This character is invalid in this context
+// Error: This character is invalid in this context
+// Error: This character is invalid in this context
+// Error: This character is invalid in this context
+// ------------------------------------------------
 
 %start CompilationUnit
 
@@ -260,7 +281,5 @@ Number						:	INT_NUMBER
 
 %%
 
-public string yytext
-{
-	get { return((TCCLScanner)Scanner).yytext; }
-}
+// ==========================================================================
+

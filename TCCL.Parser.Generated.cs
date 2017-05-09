@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/8/2017 11:39:28 PM
+// DateTime: 5/9/2017 12:20:11 AM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/8/2017 11:36:30 PM>
+// Input file <TCCL.grammar.y - 5/9/2017 12:20:10 AM>
 
 // options: no-lines gplex
 
@@ -389,5 +389,9 @@ internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
         return CharToString((char)terminal);
   }
 
+public string yytext
+{
+	get { return((TCCLScanner)Scanner).yytext; }
+}
 }
 }
