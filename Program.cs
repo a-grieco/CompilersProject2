@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace ASTBuilder
 {
     class Program
     {
+        private const string QUIT = "quit";
+
         static void Main(string[] args)
         {
             var parser = new TCCLParser();
@@ -15,33 +18,58 @@ namespace ASTBuilder
             var name = "good1p.txt";
             Console.WriteLine("Parsing file " + name);
             parser.Parse(name);
-            Console.WriteLine("Parsing complete");
+            Console.WriteLine("Parsing complete\n");
 
-            bool fileIsValid = false;
-            while (!fileIsValid)
+            bool notQuit = true;
+            string fileName = "";
+
+            while (notQuit)
             {
-                Console.Write("Please enter the file name to parse: ");
-                var fileName = Console.ReadLine();
-                if (!string.IsNullOrEmpty(fileName))
+                bool fileIsValid = false;
+                while (!fileIsValid)
                 {
-                    fileName = fileName.Trim();
-                    Console.WriteLine(fileName.Substring(fileName.Length - 4));
-                    if (!fileName.Substring(fileName.Length - 4).Equals(".txt"))
+                    Console.Write("Please enter the file name to parse: ");
+                    fileName = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(fileName))
                     {
-                        fileName += ".txt";
-                    }
-                    fileIsValid = true;
-                }
-                else
-                {
-                    Console.WriteLine("Unable to process given file name " +
-                                      "\"{0}\", please try again.", fileName);
-                }
-                // TODO: check if file exists? etc. depending on what .Parse() handles
-                
-            }
-           
+                        fileName = fileName.Trim();
 
+                        if (fileName.ToLower().Equals(QUIT))
+                        {
+                            fileIsValid = true;
+                            notQuit = false;
+                        }
+                        else
+                        {
+                            if (fileName.Length < 4 || 
+                                !fileName.Substring(fileName.Length - 4).Equals(".txt"))
+                            {
+                                fileName += ".txt";
+                            }
+                            if (File.Exists(fileName))
+                            {
+                                fileIsValid = true;
+                            }
+                        }
+
+                    }
+                    if(!fileIsValid)
+                    {
+                        Console.WriteLine("Unable to process given file name " +
+                                          "\"{0}\", please try again.", fileName);
+                    }
+                }
+
+                if (notQuit)
+                {
+                    Console.WriteLine("Parsing file " + fileName);
+                    parser.Parse(fileName);
+                    Console.WriteLine("Parsing complete\n");
+                }
+            }
+
+            Console.WriteLine("\nExited program. Press any key to close.");
+            Console.ReadKey();
         }
     }
 }
