@@ -16,7 +16,7 @@ namespace ASTBuilder
 	   private AbstractNode parent;
 	   private AbstractNode child;
 	   private AbstractNode firstSib;
-	   private Type type;
+	   private Type primType;
 
 	   public AbstractNode()
 	   {
@@ -129,11 +129,11 @@ namespace ASTBuilder
 	   {
 		   get
 		   {
-			   return type;
+			   return primType;
 		   }
 		   set
 		   {
-			   this.type = value;
+			   this.primType = value;
 		   }
 	   }
 

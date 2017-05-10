@@ -4,7 +4,6 @@ namespace ASTBuilder
 {
     internal partial class TCCLParser
     {
-        //  DELETE NOTE : a little redundant since everything will be a class, reuse for struct?
         public static AbstractNode MakeClassDecl(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
         {
             return new ClassDeclNode(modifiers, identifier, classBody);
@@ -41,10 +40,10 @@ namespace ASTBuilder
             return new FieldDeclarationsNode(fieldDeclaration);
         }
 
-        public static AbstractNode MakeFieldDeclarations(AbstractNode fieldDecls, 
+        public static AbstractNode MakeFieldDeclarations(AbstractNode fieldDecls,
             AbstractNode fieldDecl)
         {
-            ((FieldDeclarationsNode) fieldDecls).AddFieldDeclaration(fieldDecl);
+            ((FieldDeclarationsNode)fieldDecls).AddFieldDeclaration(fieldDecl);
             return fieldDecls;
         }
 
@@ -53,14 +52,52 @@ namespace ASTBuilder
             return new FieldDeclarationNode(node, node.whatAmI());
 
             // TODO: add the switch once node types are created
+        }
 
-            //switch (node.whatAmI())
-            //{
-            //    case FieldVariableDeclarationNode:
-            //        break;
-            //}
+        public static AbstractNode MakeStructDecl(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
+        {
+            return new StructDeclNode(modifiers, identifier, classBody);
+        }
+
+        public static AbstractNode MakeFieldVariableDeclaration(AbstractNode modifiers,
+            AbstractNode typeSpecifier, AbstractNode fieldVariableDeclarators)
+        {
+            return new FieldVariableDeclarationNode(modifiers, typeSpecifier,
+                fieldVariableDeclarators);
+        }
+
+        public static AbstractNode MakeTypeSpecifier(AbstractNode node)
+        {
+            return new TypeSpecifierNode(node); // node = TypeNameNode or ArraySpecifierNode
+        }
+
+        public static AbstractNode MakeTypeName(AbstractNode node, bool isArraySpecifier = false)
+        {
+            var typeNameNode = new TypeNameNode(node);
+            if (isArraySpecifier)
+            {
+                typeNameNode.MakeArraySpecifier();
+            }
+            return typeNameNode;
+        }
+
+        public enum PrimitiveEnums { BOOLEAN, INT, VOID }
+        public static AbstractNode MakePrimitiveType(PrimitiveEnums primType)
+        {
+            return new PrimitiveTypeNode(primType); // BOOLEAN, INT, or VOID
+        }
+
+        public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDeclName)
+        {
+            return new FieldVariableDeclaratorsNode(fieldVarDeclName);
+        }
+
+        public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDecls, AbstractNode fieldVarDeclName)
+        {
+            ((FieldVariableDeclaratorsNode) fieldVarDecls).AddFieldVariableDeclaratorName(fieldVarDeclName);
+            return fieldVarDecls;
         }
     }
 
-
+    
 }

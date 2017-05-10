@@ -56,7 +56,7 @@ FieldDeclaration	:	FieldVariableDeclaration SEMICOLON	{ $$ = MakeFieldDeclaratio
 					|	StructDeclaration	{ $$ = MakeFieldDeclaration($1); }
 					;
 
-StructDeclaration	:	Modifiers STRUCT Identifier ClassBody
+StructDeclaration	:	Modifiers STRUCT Identifier ClassBody	{ $$ = MakeStructDecl($1, $3, $4); }
 					;
 
 
@@ -68,27 +68,27 @@ StructDeclaration	:	Modifiers STRUCT Identifier ClassBody
  * here to get the information where you want it, so that the declarations can
  * be suitably annotated with their type and modifier information.
  */
-FieldVariableDeclaration	:	Modifiers TypeSpecifier FieldVariableDeclarators
+FieldVariableDeclaration	:	Modifiers TypeSpecifier FieldVariableDeclarators	{ $$ = MakeFieldVariableDeclaration($1, $2, $3); }
 							;
 
-TypeSpecifier				:	TypeName
-							| 	ArraySpecifier
+TypeSpecifier				:	TypeName	{ $$ = MakeTypeSpecifier($1); }
+							| 	ArraySpecifier	{ $$ = MakeTypeSpecifier($1); }
 							;
 
-TypeName					:	PrimitiveType
-							|   QualifiedName
+TypeName					:	PrimitiveType	{ $$ = MakeTypeName($1); }
+							|   QualifiedName	{ $$ = MakeTypeName($1); }
 							;
 
-ArraySpecifier				: 	TypeName LBRACKET RBRACKET
+ArraySpecifier				: 	TypeName LBRACKET RBRACKET	{ $$ = MakeTypeName($1, true); }
 							;
 							
-PrimitiveType				:	BOOLEAN
-							|	INT
-							|	VOID 
+PrimitiveType				:	BOOLEAN	{ $$ = MakePrimitiveType(PrimitiveEnums.BOOLEAN); }
+							|	INT		{ $$ = MakePrimitiveType(PrimitiveEnums.INT); }
+							|	VOID	{ $$ = MakePrimitiveType(PrimitiveEnums.VOID); }
 							;
 
-FieldVariableDeclarators	:	FieldVariableDeclaratorName
-							|   FieldVariableDeclarators COMMA FieldVariableDeclaratorName
+FieldVariableDeclarators	:	FieldVariableDeclaratorName	{ $$ = MakeFieldVariableDeclarators($1); }
+							|   FieldVariableDeclarators COMMA FieldVariableDeclaratorName	{ $$ = MakeFieldVariableDeclarators($1, $3); }
 							;
 
 
@@ -106,7 +106,7 @@ ParameterList				:	Parameter
 Parameter					:	TypeSpecifier DeclaratorName
 							;
 
-QualifiedName				:	Identifier
+QualifiedName				:	Identifier	{ $$ = $1; }
 							|	QualifiedName PERIOD Identifier
 							;
 
@@ -116,7 +116,7 @@ DeclaratorName				:	Identifier
 MethodDeclaratorName		:	Identifier
 							;
 
-FieldVariableDeclaratorName	:	Identifier
+FieldVariableDeclaratorName	:	Identifier	{ $$ = $1; }
 							;
 
 LocalVariableDeclaratorName	:	Identifier

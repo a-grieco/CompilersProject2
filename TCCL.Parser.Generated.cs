@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/9/2017 3:39:45 PM
+// DateTime: 5/9/2017 10:22:36 PM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/9/2017 3:39:42 PM>
+// Input file <TCCL.grammar.y - 5/9/2017 10:22:34 PM>
 
 // options: no-lines gplex
 
@@ -422,6 +422,49 @@ internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
         break;
       case 18: // FieldDeclaration -> StructDeclaration
 { CurrentSemanticValue = MakeFieldDeclaration(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 19: // StructDeclaration -> Modifiers, STRUCT, Identifier, ClassBody
+{ CurrentSemanticValue = MakeStructDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 20: // FieldVariableDeclaration -> Modifiers, TypeSpecifier, FieldVariableDeclarators
+{ CurrentSemanticValue = MakeFieldVariableDeclaration(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 21: // TypeSpecifier -> TypeName
+{ CurrentSemanticValue = MakeTypeSpecifier(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 22: // TypeSpecifier -> ArraySpecifier
+{ CurrentSemanticValue = MakeTypeSpecifier(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 23: // TypeName -> PrimitiveType
+{ CurrentSemanticValue = MakeTypeName(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 24: // TypeName -> QualifiedName
+{ CurrentSemanticValue = MakeTypeName(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 25: // ArraySpecifier -> TypeName, LBRACKET, RBRACKET
+{ CurrentSemanticValue = MakeTypeName(ValueStack[ValueStack.Depth-3], true); }
+        break;
+      case 26: // PrimitiveType -> BOOLEAN
+{ CurrentSemanticValue = MakePrimitiveType(PrimitiveEnums.BOOLEAN); }
+        break;
+      case 27: // PrimitiveType -> INT
+{ CurrentSemanticValue = MakePrimitiveType(PrimitiveEnums.INT); }
+        break;
+      case 28: // PrimitiveType -> VOID
+{ CurrentSemanticValue = MakePrimitiveType(PrimitiveEnums.VOID); }
+        break;
+      case 29: // FieldVariableDeclarators -> FieldVariableDeclaratorName
+{ CurrentSemanticValue = MakeFieldVariableDeclarators(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 30: // FieldVariableDeclarators -> FieldVariableDeclarators, COMMA, 
+               //                             FieldVariableDeclaratorName
+{ CurrentSemanticValue = MakeFieldVariableDeclarators(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 37: // QualifiedName -> Identifier
+{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+        break;
+      case 41: // FieldVariableDeclaratorName -> Identifier
+{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
         break;
       case 109: // Identifier -> IDENTIFIER
 {  CurrentSemanticValue = MakeIdentifier(yytext); }

@@ -69,7 +69,7 @@ namespace ASTBuilder
             }
 
             Console.WriteLine("\nProgram complete. Press any key to close.");
-            Console.ReadKey();
+            //Console.ReadKey();    // TODO: uncomment this
         }
     }
 }
