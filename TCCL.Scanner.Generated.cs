@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  HPERSIMMON
-//  DateTime: 5/9/2017 10:22:35 PM
+//  DateTime: 5/11/2017 1:24:16 PM
 //  UserName: amgrieco
-//  GPLEX input file <TCCL.analyzer.lex - 5/8/2017 11:36:31 PM>
+//  GPLEX input file <TCCL.analyzer.lex - 5/11/2017 11:58:33 AM>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: verbose, parser, stack, minimize
@@ -48,13 +48,13 @@ namespace ASTBuilder
     // If you declare /noparser, or %option noparser then you get this.
     //
 
-     internal enum Token
+     public enum Token
     { 
       EOF = 0, maxParseToken = int.MaxValue 
       // must have at least these two, values are almost arbitrary
     }
 
-     internal abstract class ScanBase
+     public abstract class ScanBase
     {
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "yylex")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "yylex")]
@@ -76,7 +76,7 @@ namespace ASTBuilder
         }
     }
     
-     internal interface IColorScan
+     public interface IColorScan
     {
         void SetSource(string source, int offset);
         int GetNext(ref int state, out int start, out int end);
@@ -88,7 +88,7 @@ namespace ASTBuilder
     // If the compiler can't find the scanner base class maybe you
     // need to run GPPG with the /gplex option, or GPLEX with /noparser
 #if BABEL
-     internal sealed partial class TCCLScanner : ScanBase, IColorScan
+     public sealed partial class TCCLScanner : ScanBase, IColorScan
     {
         private ScanBuff buffer;
         int currentScOrd;  // start condition ordinal
@@ -105,7 +105,7 @@ namespace ASTBuilder
                    currentStart = startState[value]; }
         }
 #else  // BABEL
-     internal sealed partial class TCCLScanner : ScanBase
+     public sealed partial class TCCLScanner : ScanBase
     {
         private ScanBuff buffer;
         int currentScOrd;  // start condition ordinal
@@ -855,12 +855,12 @@ int NextState() {
         // =================== End Nested classes =======================
 
 #if !NOFILES
-     internal TCCLScanner(Stream file) {
+     public TCCLScanner(Stream file) {
             SetSource(file); // no unicode option
         }   
 #endif // !NOFILES
 
-     internal TCCLScanner() { }
+     public TCCLScanner() { }
 
         private int readPos;
 

@@ -1,7 +1,7 @@
 %namespace ASTBuilder
 %partial
 %parsertype TCCLParser
-%visibility internal
+%visibility public
 %tokentype Token
 %YYSTYPE AbstractNode
 
@@ -27,7 +27,7 @@
 
 %%
 
-CompilationUnit		:	ClassDeclaration	
+CompilationUnit		:	ClassDeclaration	{ $$ = MakeCompilationUnit($1); }
 					;
 
 ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDecl($1, $3, $4); Console.WriteLine($$);}
@@ -79,7 +79,7 @@ TypeName					:	PrimitiveType	{ $$ = MakeTypeName($1); }
 							|   QualifiedName	{ $$ = MakeTypeName($1); }
 							;
 
-ArraySpecifier				: 	TypeName LBRACKET RBRACKET	{ $$ = MakeTypeName($1, true); }
+ArraySpecifier				: 	TypeName LBRACKET RBRACKET	{ $$ = MakeArraySpecifier($1); }
 							;
 							
 PrimitiveType				:	BOOLEAN	{ $$ = MakePrimitiveType(PrimitiveEnums.BOOLEAN); }

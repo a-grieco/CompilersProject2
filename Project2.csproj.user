@@ -4,6 +4,6 @@
     <StartWorkingDirectory>C:\Users\amgrieco\Documents\Visual Studio 2017\Projects\project2\TestFiles\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
 </Project>

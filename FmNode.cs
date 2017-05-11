@@ -2,8 +2,13 @@
 
 namespace ASTBuilder
 {
-    internal partial class TCCLParser
+    public partial class TCCLParser
     {
+        public static AbstractNode MakeCompilationUnit(AbstractNode classDeclaration)
+        {
+            return new CompilationUnitNode(classDeclaration);
+        }
+
         public static AbstractNode MakeClassDecl(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
         {
             return new ClassDeclNode(modifiers, identifier, classBody);
@@ -71,14 +76,14 @@ namespace ASTBuilder
             return new TypeSpecifierNode(node); // node = TypeNameNode or ArraySpecifierNode
         }
 
-        public static AbstractNode MakeTypeName(AbstractNode node, bool isArraySpecifier = false)
+        public static AbstractNode MakeTypeName(AbstractNode node)
         {
-            var typeNameNode = new TypeNameNode(node);
-            if (isArraySpecifier)
-            {
-                typeNameNode.MakeArraySpecifier();
-            }
-            return typeNameNode;
+            return new TypeNameNode(node);  // PrimitiveType or QualifiedName
+        }
+
+        public static AbstractNode MakeArraySpecifier(AbstractNode typeName)
+        {
+            return new ArraySpecifierNode(typeName);
         }
 
         public enum PrimitiveEnums { BOOLEAN, INT, VOID }
@@ -99,5 +104,5 @@ namespace ASTBuilder
         }
     }
 
-    
+
 }

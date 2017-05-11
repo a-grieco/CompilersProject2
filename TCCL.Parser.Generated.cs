@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/9/2017 10:22:36 PM
+// DateTime: 5/11/2017 1:24:17 PM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/9/2017 10:22:34 PM>
+// Input file <TCCL.grammar.y - 5/11/2017 1:24:15 PM>
 
 // options: no-lines gplex
 
@@ -19,7 +19,7 @@ using QUT.Gppg;
 
 namespace ASTBuilder
 {
-internal enum Token {error=2,EOF=3,STATIC=4,STRUCT=5,QUESTION=6,
+public enum Token {error=2,EOF=3,STATIC=4,STRUCT=5,QUESTION=6,
     RSLASH=7,MINUSOP=8,NULL=9,INT=10,OP_EQ=11,OP_LT=12,
     COLON=13,OP_LOR=14,ELSE=15,PERCENT=16,THIS=17,CLASS=18,
     PIPE=19,PUBLIC=20,PERIOD=21,HAT=22,COMMA=23,VOID=24,
@@ -31,7 +31,7 @@ internal enum Token {error=2,EOF=3,STATIC=4,STRUCT=5,QUESTION=6,
 
 // Abstract base class for GPLEX scanners
 [GeneratedCodeAttribute( "Gardens Point Parser Generator", "1.5.2")]
-internal abstract class ScanBase : AbstractScanner<AbstractNode,LexLocation> {
+public abstract class ScanBase : AbstractScanner<AbstractNode,LexLocation> {
   private LexLocation __yylloc = new LexLocation();
   public override LexLocation yylloc { get { return __yylloc; } set { __yylloc = value; } }
   protected virtual bool yywrap() { return true; }
@@ -39,7 +39,7 @@ internal abstract class ScanBase : AbstractScanner<AbstractNode,LexLocation> {
 
 // Utility class for encapsulating token information
 [GeneratedCodeAttribute( "Gardens Point Parser Generator", "1.5.2")]
-internal class ScanObj {
+public class ScanObj {
   public int token;
   public AbstractNode yylval;
   public LexLocation yylloc;
@@ -49,7 +49,7 @@ internal class ScanObj {
 }
 
 [GeneratedCodeAttribute( "Gardens Point Parser Generator", "1.5.2")]
-internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
+public partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 {
 #pragma warning disable 649
   private static Dictionary<int, string> aliases;
@@ -375,6 +375,9 @@ internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 #pragma warning disable 162, 1522
     switch (action)
     {
+      case 2: // CompilationUnit -> ClassDeclaration
+{ CurrentSemanticValue = MakeCompilationUnit(ValueStack[ValueStack.Depth-1]); }
+        break;
       case 3: // ClassDeclaration -> Modifiers, CLASS, Identifier, ClassBody
 { CurrentSemanticValue = MakeClassDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); Console.WriteLine(CurrentSemanticValue);}
         break;
@@ -442,7 +445,7 @@ internal partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 { CurrentSemanticValue = MakeTypeName(ValueStack[ValueStack.Depth-1]); }
         break;
       case 25: // ArraySpecifier -> TypeName, LBRACKET, RBRACKET
-{ CurrentSemanticValue = MakeTypeName(ValueStack[ValueStack.Depth-3], true); }
+{ CurrentSemanticValue = MakeArraySpecifier(ValueStack[ValueStack.Depth-3]); }
         break;
       case 26: // PrimitiveType -> BOOLEAN
 { CurrentSemanticValue = MakePrimitiveType(PrimitiveEnums.BOOLEAN); }

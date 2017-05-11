@@ -21,7 +21,7 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public abstract class ShiftReduceParser<TValue, TSpan>
 #else
-    internal abstract class ShiftReduceParser<TValue, TSpan>
+    public abstract class ShiftReduceParser<TValue, TSpan>
 #endif
  where TSpan : IMerge<TSpan>, new() {
         private AbstractScanner<TValue, TSpan> scanner;
@@ -141,7 +141,7 @@ namespace QUT.Gppg {
         // Reason for FxCop message suppression -
         // This exception cannot escape from the local context
         private class AcceptException : Exception {
-            internal AcceptException() { }
+            public AcceptException() { }
             protected AcceptException( SerializationInfo i, StreamingContext c ) : base( i, c ) { }
         }
         [Serializable]
@@ -149,7 +149,7 @@ namespace QUT.Gppg {
         // Reason for FxCop message suppression -
         // This exception cannot escape from the local context
         private class AbortException : Exception {
-            internal AbortException() { }
+            public AbortException() { }
             protected AbortException( SerializationInfo i, StreamingContext c ) : base( i, c ) { }
         }
         [Serializable]
@@ -157,7 +157,7 @@ namespace QUT.Gppg {
         // Reason for FxCop message suppression -
         // This exception cannot escape from the local context
         private class ErrorException : Exception {
-            internal ErrorException() { }
+            public ErrorException() { }
             protected ErrorException( SerializationInfo i, StreamingContext c ) : base( i, c ) { }
         }
 
@@ -585,7 +585,7 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public interface IMerge<TSpan>
 #else
-    internal interface IMerge<TSpan>
+    public interface IMerge<TSpan>
 #endif
  {
         /// <summary>
@@ -608,8 +608,8 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public class LexLocation : IMerge<LexLocation>
 #else
-    [SuppressMessage( "Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses" )]
-    internal class LexLocation : IMerge<LexLocation>
+    [SuppressMessage( "Microsoft.Performance", "CA1812:AvoidUninstantiatedpublicClasses" )]
+    public class LexLocation : IMerge<LexLocation>
 #endif
  {
         private int startLine;   // start line
@@ -670,7 +670,7 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public abstract class AbstractScanner<TValue, TSpan>
 #else
-    internal abstract class AbstractScanner<TValue, TSpan>
+    public abstract class AbstractScanner<TValue, TSpan>
 #endif
  where TSpan : IMerge<TSpan> {
         /// <summary>
@@ -739,15 +739,15 @@ namespace QUT.Gppg {
         /// </summary>
         public int number;
 #else
-    internal class State {
+    public class State {
         /// <summary>
         /// The index of this state in the states array.
         /// </summary>
-        internal int number;
+        public int number;
 #endif
-        internal Dictionary<int, int> ParserTable;   // Terminal -> ParseAction
-        internal Dictionary<int, int> Goto;          // NonTerminal -> State;
-        internal int defaultAction; // = 0;		     // ParseAction
+        public Dictionary<int, int> ParserTable;   // Terminal -> ParseAction
+        public Dictionary<int, int> Goto;          // NonTerminal -> State;
+        public int defaultAction; // = 0;		     // ParseAction
 
         /// <summary>
         /// State transition data for this state. Pairs of elements of the 
@@ -802,11 +802,11 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public class Rule
 #else
-    internal class Rule
+    public class Rule
 #endif
  {
-        internal int LeftHandSide; // symbol
-        internal int[] RightHandSide; // symbols
+        public int LeftHandSide; // symbol
+        public int[] RightHandSide; // symbols
 
         /// <summary>
         /// Rule constructor.  This holds the ordinal of
@@ -832,7 +832,7 @@ namespace QUT.Gppg {
 #if EXPORT_GPPG
     public class PushdownPrefixState<T>
 #else
-    internal class PushdownPrefixState<T>
+    public class PushdownPrefixState<T>
 #endif
  {
         //  Note that we cannot use the BCL Stack<T> class
@@ -853,7 +853,7 @@ namespace QUT.Gppg {
         /// </summary>
         public int Depth { get { return tos; } }
 
-        internal void Push( T value ) {
+        public void Push( T value ) {
             if (tos >= array.Length) {
                 T[] newarray = new T[array.Length * 2];
                 System.Array.Copy( array, newarray, tos );
@@ -862,14 +862,14 @@ namespace QUT.Gppg {
             array[tos++] = value;
         }
 
-        internal T Pop() {
+        public T Pop() {
             T rslt = array[--tos];
             array[tos] = default( T );
             return rslt;
         }
 
-        internal T TopElement() { return array[tos - 1]; }
+        public T TopElement() { return array[tos - 1]; }
 
-        internal bool IsEmpty() { return tos == 0; }
+        public bool IsEmpty() { return tos == 0; }
     }
 }

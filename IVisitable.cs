@@ -2,9 +2,9 @@
 {
 	/// <summary>
 	/// Reflective visitor pattern -- a node must accept a visitor </summary>
-	public interface ReflectiveVisitable
+	public interface IVisitable
 	{
-	   void accept(ReflectiveVisitable rv);
+	   void Accept(IVisitor visitor);
 	}
 
 }
