@@ -192,7 +192,7 @@ namespace ASTBuilder
         }
 
         /// Visitor pattern
-        public void Accept(IVisitor visitor)
+        public virtual void Accept(IVisitor visitor)
 	   {
 		   visitor.Visit(this);
 	   }

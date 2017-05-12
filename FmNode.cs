@@ -99,10 +99,39 @@ namespace ASTBuilder
 
         public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDecls, AbstractNode fieldVarDeclName)
         {
-            ((FieldVariableDeclaratorsNode) fieldVarDecls).AddFieldVariableDeclaratorName(fieldVarDeclName);
+            ((FieldVariableDeclaratorsNode)fieldVarDecls).AddFieldVariableDeclaratorName(fieldVarDeclName);
             return fieldVarDecls;
         }
-    }
 
+        public static AbstractNode MakeMethodDeclaration(AbstractNode modifiers,
+            AbstractNode typeSpecifier, AbstractNode methodDeclarator,
+            AbstractNode methodBody)
+        {
+            return new MethodDeclarationNode(modifiers, typeSpecifier, methodDeclarator, methodBody);
+        }
+
+        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName)
+        {
+            return new MethodDeclaratorNode(methodDeclName, null);
+        }
+
+        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName, 
+            AbstractNode parameterList)
+        {
+            return new MethodDeclaratorNode(methodDeclName, parameterList);
+        }
+
+        public static AbstractNode MakeParameterList(AbstractNode parameter)
+        {
+            return new ParameterListNode(parameter);
+        }
+
+        public static AbstractNode MakeParameterList(AbstractNode parameterList, AbstractNode parameter)
+        {
+            ((ParameterListNode)parameterList).AddParameter(parameter);
+            return parameterList;
+        }
+
+    }
 
 }

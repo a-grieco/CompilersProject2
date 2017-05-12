@@ -30,7 +30,7 @@
 CompilationUnit		:	ClassDeclaration	{ $$ = MakeCompilationUnit($1); }
 					;
 
-ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDecl($1, $3, $4); Console.WriteLine($$);}
+ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDecl($1, $3, $4); }
 					;
 
 Modifiers			:	PUBLIC		{ $$ = MakeModifiers(Token.PUBLIC); }
@@ -92,15 +92,15 @@ FieldVariableDeclarators	:	FieldVariableDeclaratorName	{ $$ = MakeFieldVariableD
 							;
 
 
-MethodDeclaration			:	Modifiers TypeSpecifier MethodDeclarator MethodBody
+MethodDeclaration			:	Modifiers TypeSpecifier MethodDeclarator MethodBody	{ $$ = MakeMethodDeclaration($1, $2, $3, $4); }
 							;
 
-MethodDeclarator			:	MethodDeclaratorName LPAREN ParameterList RPAREN
-							|   MethodDeclaratorName LPAREN RPAREN
+MethodDeclarator			:	MethodDeclaratorName LPAREN ParameterList RPAREN	{ $$ = MakeMethodDeclarator($1, $3); }
+							|   MethodDeclaratorName LPAREN RPAREN	{ $$ = MakeMethodDeclarator($1); }
 							;
 
-ParameterList				:	Parameter
-							|   ParameterList COMMA Parameter	
+ParameterList				:	Parameter	{$$ = MakeParameterList($1); }
+							|   ParameterList COMMA Parameter	{$$ = MakeParameterList($1, $3); }
 							;
 
 Parameter					:	TypeSpecifier DeclaratorName
@@ -110,16 +110,16 @@ QualifiedName				:	Identifier	{ $$ = $1; }
 							|	QualifiedName PERIOD Identifier
 							;
 
-DeclaratorName				:	Identifier
+DeclaratorName				:	Identifier	{ $$ = $1; }
 							;
 
-MethodDeclaratorName		:	Identifier
+MethodDeclaratorName		:	Identifier	{ $$ = $1; }
 							;
 
 FieldVariableDeclaratorName	:	Identifier	{ $$ = $1; }
 							;
 
-LocalVariableDeclaratorName	:	Identifier
+LocalVariableDeclaratorName	:	Identifier	{ $$ = $1; }
 							;
 
 MethodBody					:	Block

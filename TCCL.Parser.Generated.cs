@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/11/2017 1:24:17 PM
+// DateTime: 5/11/2017 7:51:00 PM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/11/2017 1:24:15 PM>
+// Input file <TCCL.grammar.y - 5/11/2017 7:50:58 PM>
 
 // options: no-lines gplex
 
@@ -379,7 +379,7 @@ public partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 { CurrentSemanticValue = MakeCompilationUnit(ValueStack[ValueStack.Depth-1]); }
         break;
       case 3: // ClassDeclaration -> Modifiers, CLASS, Identifier, ClassBody
-{ CurrentSemanticValue = MakeClassDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); Console.WriteLine(CurrentSemanticValue);}
+{ CurrentSemanticValue = MakeClassDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
         break;
       case 4: // Modifiers -> PUBLIC
 { CurrentSemanticValue = MakeModifiers(Token.PUBLIC); }
@@ -463,10 +463,34 @@ public partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
                //                             FieldVariableDeclaratorName
 { CurrentSemanticValue = MakeFieldVariableDeclarators(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
         break;
+      case 31: // MethodDeclaration -> Modifiers, TypeSpecifier, MethodDeclarator, MethodBody
+{ CurrentSemanticValue = MakeMethodDeclaration(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 32: // MethodDeclarator -> MethodDeclaratorName, LPAREN, ParameterList, RPAREN
+{ CurrentSemanticValue = MakeMethodDeclarator(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2]); }
+        break;
+      case 33: // MethodDeclarator -> MethodDeclaratorName, LPAREN, RPAREN
+{ CurrentSemanticValue = MakeMethodDeclarator(ValueStack[ValueStack.Depth-3]); }
+        break;
+      case 34: // ParameterList -> Parameter
+{CurrentSemanticValue = MakeParameterList(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 35: // ParameterList -> ParameterList, COMMA, Parameter
+{CurrentSemanticValue = MakeParameterList(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
+        break;
       case 37: // QualifiedName -> Identifier
 { CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
         break;
+      case 39: // DeclaratorName -> Identifier
+{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+        break;
+      case 40: // MethodDeclaratorName -> Identifier
+{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+        break;
       case 41: // FieldVariableDeclaratorName -> Identifier
+{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+        break;
+      case 42: // LocalVariableDeclaratorName -> Identifier
 { CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
         break;
       case 109: // Identifier -> IDENTIFIER

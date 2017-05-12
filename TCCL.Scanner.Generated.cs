@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  HPERSIMMON
-//  DateTime: 5/11/2017 1:24:16 PM
+//  DateTime: 5/11/2017 7:51:00 PM
 //  UserName: amgrieco
-//  GPLEX input file <TCCL.analyzer.lex - 5/11/2017 11:58:33 AM>
+//  GPLEX input file <TCCL.analyzer.lex - 5/11/2017 6:22:08 PM>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: verbose, parser, stack, minimize
@@ -168,9 +168,9 @@ public string yystringval;
         }
     };
 
-    static int[] startState = new int[] {119, 126, 0};
+    static int[] startState = new int[] {119, 125, 0};
 
-    static Table[] NxS = new Table[127] {
+    static Table[] NxS = new Table[126] {
 /* NxS[   0] */ new Table(0, 0, 0, null), // Shortest string ""
 /* NxS[   1] */ new Table(0, 0, -1, null), // Shortest string "\x01"
 /* NxS[   2] */ new Table(0, 0, -1, null), // Shortest string "\t"
@@ -759,14 +759,12 @@ public string yystringval;
 /* NxS[ 121] */ // Shortest string "//"
       new Table(10, 4, 121, new sbyte[] {108, 121, 121, 109}),
 /* NxS[ 122] */ // Shortest string "/*\x01"
-      new Table(126, 1, -1, new sbyte[] {124}),
+      new Table(42, 1, 122, new sbyte[] {124}),
 /* NxS[ 123] */ // Shortest string "/**"
       new Table(42, 6, -1, new sbyte[] {123, -1, -1, -1, -1, 108}),
-/* NxS[ 124] */ // Shortest string "/*\x01~"
-      new Table(42, 1, -1, new sbyte[] {125}),
-/* NxS[ 125] */ // Shortest string "/*\x01~*"
+/* NxS[ 124] */ // Shortest string "/*\x01*"
       new Table(47, 1, -1, new sbyte[] {108}),
-/* NxS[ 126] */ // Shortest string ""
+/* NxS[ 125] */ // Shortest string ""
       new Table(10, 83, 112, new sbyte[] {1, 112, 112, 1, 112, 112, 
           112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 
           112, 112, 113, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 

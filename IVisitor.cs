@@ -9,5 +9,8 @@ namespace ASTBuilder
     public interface IVisitor
     {
         void Visit(AbstractNode node);
+        void Visit(ModifiersNode modNode);
+        void Visit(IdentifierNode idNode);
+        void Visit(PrimitiveTypeNode ptNode);
     }
 }

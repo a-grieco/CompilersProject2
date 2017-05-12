@@ -7,19 +7,34 @@ namespace ASTBuilder
 {
     public class Visitor : IVisitor
     {
-        private string _output = "";
-
-        public string Output
-        {
-            get { return _output; }
-        }
-
         public void Visit(AbstractNode node)
         {
-            _output = node.Name;
-            Console.WriteLine(_output);
+            Console.WriteLine(node.Name);
         }
 
-        // other specific types written here...
+        // special prints
+        public void Visit(ModifiersNode modNode)
+        {
+            Console.Write(modNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(modNode);
+            Console.ResetColor();
+        }
+
+        public void Visit(IdentifierNode idNode)
+        {
+            Console.Write(idNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(idNode.ID);
+            Console.ResetColor();
+        }
+
+        public void Visit(PrimitiveTypeNode ptNode)
+        {
+            Console.Write(ptNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(ptNode);
+            Console.ResetColor();
+        }
     }
 }
