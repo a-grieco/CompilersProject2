@@ -36,5 +36,13 @@ namespace ASTBuilder
             Console.WriteLine(ptNode);
             Console.ResetColor();
         }
+
+        public void Visit(StaticInitializerNode statNode)
+        {
+            Console.Write(statNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(statNode);
+            Console.ResetColor();
+        }
     }
 }

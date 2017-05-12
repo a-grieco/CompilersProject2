@@ -17,14 +17,14 @@ namespace ASTBuilder
         }
     }
 
-    public class ClassDeclNode : AbstractNode
+    public class ClassDeclarationNode : AbstractNode
     {
         public override string Name
         {
             get { return "ClassDeclaration"; }
         }
 
-        public ClassDeclNode(AbstractNode modifiers, AbstractNode identifier,
+        public ClassDeclarationNode(AbstractNode modifiers, AbstractNode identifier,
             AbstractNode classBody)
         {
             adoptChildren(modifiers);
@@ -386,8 +386,7 @@ namespace ASTBuilder
             }
         }
     }
-
-
+    
     public class ParameterListNode : AbstractNode
     {
         public override string Name
@@ -405,4 +404,227 @@ namespace ASTBuilder
             adoptChildren(parameter);
         }
     }
+
+    public class ParameterNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "Parameter"; }
+        }
+
+        public ParameterNode(AbstractNode typeSpecifier, AbstractNode declaratorName)
+        {
+            adoptChildren(typeSpecifier);
+            adoptChildren(declaratorName);
+        }
+    }
+
+    public class QualifiedNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "QualifiedName"; }
+        }
+
+        public QualifiedNameNode(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+
+        public void AddIdentifier(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+    }
+
+    public class DeclaratorNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "DeclaratorName"; }
+        }
+
+        public DeclaratorNameNode(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+    }
+
+    public class MethodDeclaratorNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "MethodDeclaratorName"; }
+        }
+
+        public MethodDeclaratorNameNode(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+    }
+
+    public class FieldVariableDeclaratorNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "FieldVariableDeclaratorName"; }
+        }
+
+        public FieldVariableDeclaratorNameNode(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+    }
+
+    public class LocalVariableDeclaratorNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "LocalVariableDeclaratorName"; }
+        }
+
+        public LocalVariableDeclaratorNameNode(AbstractNode identifier)
+        {
+            adoptChildren(identifier);
+        }
+    }
+
+    public class MethodBodyNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "MethodBody"; }
+        }
+
+        public MethodBodyNode(AbstractNode block)
+        {
+            adoptChildren(block);
+        }
+    }
+
+    public class ConstructorDeclarationNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ConstructorDeclaration"; }
+        }
+
+        public ConstructorDeclarationNode(AbstractNode modifiers, AbstractNode methodDeclarator, AbstractNode block)
+        {
+            adoptChildren(modifiers);
+            adoptChildren(methodDeclarator);
+            adoptChildren(block);
+        }
+    }
+
+    public class StaticInitializerNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "StaticInitializer"; }
+        }
+
+        public StaticInitializerNode(AbstractNode block)
+        {
+            adoptChildren(block);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return "STATIC";  // TODO: this seems redundant...
+        }
+    }
+
+    public class BlockNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "Block"; }
+        }
+
+        public BlockNode(AbstractNode localVarDeclsAndStmnts)
+        {
+            if (localVarDeclsAndStmnts != null)
+            {
+                adoptChildren(localVarDeclsAndStmnts);
+            }
+        }
+    }
+
+    // TODO: verify that this ordering is correct
+    public class LocalVariableDeclarationsAndStatementsNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "LocalVariableDeclarationsAndStatements"; }
+        }
+
+        public LocalVariableDeclarationsAndStatementsNode(AbstractNode locVarDeclOrStmnt)
+        {
+            adoptChildren(locVarDeclOrStmnt);
+        }
+
+        public void AddLocalVariableDeclOrStmnt(AbstractNode locVarDeclOrStmnt)
+        {
+            adoptChildren(locVarDeclOrStmnt);
+        }
+    }
+
+    public class LocalVariableDeclarationOrStatement : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "LocalVariableDeclarationOrStatement"; }
+        }
+
+        public LocalVariableDeclarationOrStatement(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class LocalVariableDeclarationStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "LocalVariableDeclarationStatement"; }
+        }
+
+        public LocalVariableDeclarationStatementNode(AbstractNode typeSpecifier, AbstractNode localVariableDeclarators, AbstractNode structDeclaration)
+        {
+            if (structDeclaration == null)
+            {
+                adoptChildren(typeSpecifier);
+                adoptChildren(localVariableDeclarators);
+            }
+            else
+            {
+                adoptChildren(structDeclaration);
+            }
+        }
+    }
+
+    public class LocalVariableDeclaratorsNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "LocalVariableDeclarators"; }
+        }
+
+        public LocalVariableDeclaratorsNode(AbstractNode localVarDeclName)
+        {
+            adoptChildren(localVarDeclName);
+        }
+
+        public void AddLocalVariableDeclaratorName(AbstractNode localVarDeclName)
+        {
+            adoptChildren(localVarDeclName);
+        }
+    }
+
 }

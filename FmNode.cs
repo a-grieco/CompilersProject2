@@ -9,9 +9,9 @@ namespace ASTBuilder
             return new CompilationUnitNode(classDeclaration);
         }
 
-        public static AbstractNode MakeClassDecl(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
+        public static AbstractNode MakeClassDeclaration(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
         {
-            return new ClassDeclNode(modifiers, identifier, classBody);
+            return new ClassDeclarationNode(modifiers, identifier, classBody);
         }
 
         public static AbstractNode MakeModifiers(Token modToken)
@@ -104,8 +104,7 @@ namespace ASTBuilder
         }
 
         public static AbstractNode MakeMethodDeclaration(AbstractNode modifiers,
-            AbstractNode typeSpecifier, AbstractNode methodDeclarator,
-            AbstractNode methodBody)
+            AbstractNode typeSpecifier, AbstractNode methodDeclarator, AbstractNode methodBody)
         {
             return new MethodDeclarationNode(modifiers, typeSpecifier, methodDeclarator, methodBody);
         }
@@ -115,7 +114,7 @@ namespace ASTBuilder
             return new MethodDeclaratorNode(methodDeclName, null);
         }
 
-        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName, 
+        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName,
             AbstractNode parameterList)
         {
             return new MethodDeclaratorNode(methodDeclName, parameterList);
@@ -132,6 +131,113 @@ namespace ASTBuilder
             return parameterList;
         }
 
+        public static AbstractNode MakeParameter(AbstractNode typeSpecifier,
+            AbstractNode declaratorName)
+        {
+            return new ParameterNode(typeSpecifier, declaratorName);
+        }
+
+        public static AbstractNode MakeQualifiedName(AbstractNode identifier)
+        {
+            return new QualifiedNameNode(identifier);
+        }
+
+        public static AbstractNode MakeQualifiedName(AbstractNode qualifiedName,
+            AbstractNode identifier)
+        {
+            ((QualifiedNameNode)qualifiedName).AddIdentifier(identifier);
+            return qualifiedName;
+        }
+
+        public static AbstractNode MakeDeclaratorName(AbstractNode identifier)
+        {
+            return new DeclaratorNameNode(identifier);
+        }
+
+        // TODO: may want to nix these specialized declarator name nodes in the AST
+        public static AbstractNode MakeMethodDeclaratorName(AbstractNode identifier)
+        {
+            return new MethodDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeFieldVariableDeclaratorName(AbstractNode identifier)
+        {
+            return new FieldVariableDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclaratorName(AbstractNode identifier)
+        {
+            return new LocalVariableDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeMethodBody(AbstractNode body)
+        {
+            return new MethodBodyNode(body);
+        }
+
+        public static AbstractNode MakeConstructorDeclaration(AbstractNode modifiers,
+            AbstractNode methodDeclarator, AbstractNode block)
+        {
+            return new ConstructorDeclarationNode(modifiers, methodDeclarator, block);
+        }
+
+        public static AbstractNode MakeStaticInitializer(AbstractNode block)
+        {
+            return new StaticInitializerNode(block);
+        }
+
+        public static AbstractNode MakeBlock()
+        {
+            return new BlockNode(null);
+        }
+
+        public static AbstractNode MakeBlock(AbstractNode localVarDeclsAndStmnts)
+        {
+            return new BlockNode(localVarDeclsAndStmnts);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationsAndStatements(AbstractNode locVarDeclOrStmnt)
+        {
+            return new LocalVariableDeclarationsAndStatementsNode(locVarDeclOrStmnt);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationsAndStatements
+            (AbstractNode locVarDeclAndStmnt, AbstractNode locVarDeclOrStmnt)
+        {
+            ((LocalVariableDeclarationsAndStatementsNode)locVarDeclAndStmnt).AddLocalVariableDeclOrStmnt(locVarDeclOrStmnt);
+            return locVarDeclAndStmnt;
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationOrStatement(AbstractNode node)
+        {
+            return new LocalVariableDeclarationOrStatement(node);   // LocalVariableDeclarationStatment or Statment
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationStatement
+            (AbstractNode typeSpecifier, AbstractNode localVarDecls)
+        {
+            return new LocalVariableDeclarationStatementNode(typeSpecifier, localVarDecls, null);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationStatement
+            (AbstractNode structDeclaration)
+        {
+            return new LocalVariableDeclarationStatementNode(null, null, structDeclaration);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarators(AbstractNode localVarDeclName)
+        {
+            return new LocalVariableDeclaratorsNode(localVarDeclName);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarators(AbstractNode localVarDecls,
+            AbstractNode localVarDeclName)
+        {
+            ((LocalVariableDeclaratorsNode)localVarDecls).AddLocalVariableDeclaratorName(localVarDeclName);
+            return localVarDecls;
+        }
+
     }
 
+    
 }

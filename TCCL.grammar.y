@@ -30,7 +30,7 @@
 CompilationUnit		:	ClassDeclaration	{ $$ = MakeCompilationUnit($1); }
 					;
 
-ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDecl($1, $3, $4); }
+ClassDeclaration	:	Modifiers CLASS Identifier ClassBody	{ $$ = MakeClassDeclaration($1, $3, $4); }
 					;
 
 Modifiers			:	PUBLIC		{ $$ = MakeModifiers(Token.PUBLIC); }
@@ -103,56 +103,56 @@ ParameterList				:	Parameter	{$$ = MakeParameterList($1); }
 							|   ParameterList COMMA Parameter	{$$ = MakeParameterList($1, $3); }
 							;
 
-Parameter					:	TypeSpecifier DeclaratorName
+Parameter					:	TypeSpecifier DeclaratorName	{ $$ = MakeParameter($1, $2); }
 							;
 
-QualifiedName				:	Identifier	{ $$ = $1; }
-							|	QualifiedName PERIOD Identifier
+QualifiedName				:	Identifier	{ $$ = MakeQualifiedName($1); }
+							|	QualifiedName PERIOD Identifier	{ $$ = MakeQualifiedName($1, $3); }
 							;
 
-DeclaratorName				:	Identifier	{ $$ = $1; }
+DeclaratorName				:	Identifier	{ $$ = MakeDeclaratorName($1); }
 							;
 
-MethodDeclaratorName		:	Identifier	{ $$ = $1; }
+MethodDeclaratorName		:	Identifier	{ $$ = MakeMethodDeclaratorName($1); }
 							;
 
-FieldVariableDeclaratorName	:	Identifier	{ $$ = $1; }
+FieldVariableDeclaratorName	:	Identifier	{ $$ = MakeFieldVariableDeclaratorName($1); }
 							;
 
-LocalVariableDeclaratorName	:	Identifier	{ $$ = $1; }
+LocalVariableDeclaratorName	:	Identifier	{ $$ = MakeLocalVariableDeclaratorName($1); }
 							;
 
-MethodBody					:	Block
+MethodBody					:	Block	{ $$ = MakeMethodBody($1); }
 							;
 
-ConstructorDeclaration		:	Modifiers MethodDeclarator Block
+ConstructorDeclaration		:	Modifiers MethodDeclarator Block	{ $$ = MakeConstructorDeclaration($1, $2, $3); }
 							;
 
-StaticInitializer			:	STATIC Block
+StaticInitializer			:	STATIC Block	{ $$ = MakeStaticInitializer($2); }
 							;
 		
 /*
  * These can't be reorganized, because the order matters.
  * For example:  int i;  i = 5;  int j = i;
  */
-Block						:	LBRACE LocalVariableDeclarationsAndStatements RBRACE
-							|   LBRACE RBRACE
+Block						:	LBRACE LocalVariableDeclarationsAndStatements RBRACE	{ $$ = MakeBlock($2); }
+							|   LBRACE RBRACE	{ $$ = MakeBlock(); }
 							;
 
-LocalVariableDeclarationsAndStatements	:	LocalVariableDeclarationOrStatement
-										|   LocalVariableDeclarationsAndStatements LocalVariableDeclarationOrStatement
+LocalVariableDeclarationsAndStatements	:	LocalVariableDeclarationOrStatement	{ $$ = MakeLocalVariableDeclarationsAndStatements($1); }
+										|   LocalVariableDeclarationsAndStatements LocalVariableDeclarationOrStatement	{ $$ = MakeLocalVariableDeclarationsAndStatements($1, $2); }
 										;
 
-LocalVariableDeclarationOrStatement	:	LocalVariableDeclarationStatement
-									|   Statement
+LocalVariableDeclarationOrStatement	:	LocalVariableDeclarationStatement	{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
+									|   Statement	{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
 									;
 
-LocalVariableDeclarationStatement	:	TypeSpecifier LocalVariableDeclarators SEMICOLON
-									|   StructDeclaration                      						
+LocalVariableDeclarationStatement	:	TypeSpecifier LocalVariableDeclarators SEMICOLON	{ $$ = MakeLocalVariableDeclarationStatement($1, $2); }
+									|   StructDeclaration	{ $$ = MakeLocalVariableDeclarationStatement($1); }                  						
 									;
 
-LocalVariableDeclarators	:	LocalVariableDeclaratorName
-							|   LocalVariableDeclarators COMMA LocalVariableDeclaratorName
+LocalVariableDeclarators	:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1); }
+							|   LocalVariableDeclarators COMMA LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1, $3); }
 							;
 
 							

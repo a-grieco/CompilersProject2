@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.2
 // Machine:  HPERSIMMON
-// DateTime: 5/11/2017 7:51:00 PM
+// DateTime: 5/11/2017 11:20:13 PM
 // UserName: amgrieco
-// Input file <TCCL.grammar.y - 5/11/2017 7:50:58 PM>
+// Input file <TCCL.grammar.y - 5/11/2017 11:20:13 PM>
 
 // options: no-lines gplex
 
@@ -379,7 +379,7 @@ public partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
 { CurrentSemanticValue = MakeCompilationUnit(ValueStack[ValueStack.Depth-1]); }
         break;
       case 3: // ClassDeclaration -> Modifiers, CLASS, Identifier, ClassBody
-{ CurrentSemanticValue = MakeClassDecl(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+{ CurrentSemanticValue = MakeClassDeclaration(ValueStack[ValueStack.Depth-4], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
         break;
       case 4: // Modifiers -> PUBLIC
 { CurrentSemanticValue = MakeModifiers(Token.PUBLIC); }
@@ -478,20 +478,69 @@ public partial class TCCLParser: ShiftReduceParser<AbstractNode, LexLocation>
       case 35: // ParameterList -> ParameterList, COMMA, Parameter
 {CurrentSemanticValue = MakeParameterList(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
         break;
+      case 36: // Parameter -> TypeSpecifier, DeclaratorName
+{ CurrentSemanticValue = MakeParameter(ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
       case 37: // QualifiedName -> Identifier
-{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+{ CurrentSemanticValue = MakeQualifiedName(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 38: // QualifiedName -> QualifiedName, PERIOD, Identifier
+{ CurrentSemanticValue = MakeQualifiedName(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
         break;
       case 39: // DeclaratorName -> Identifier
-{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+{ CurrentSemanticValue = MakeDeclaratorName(ValueStack[ValueStack.Depth-1]); }
         break;
       case 40: // MethodDeclaratorName -> Identifier
-{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+{ CurrentSemanticValue = MakeMethodDeclaratorName(ValueStack[ValueStack.Depth-1]); }
         break;
       case 41: // FieldVariableDeclaratorName -> Identifier
-{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+{ CurrentSemanticValue = MakeFieldVariableDeclaratorName(ValueStack[ValueStack.Depth-1]); }
         break;
       case 42: // LocalVariableDeclaratorName -> Identifier
-{ CurrentSemanticValue = ValueStack[ValueStack.Depth-1]; }
+{ CurrentSemanticValue = MakeLocalVariableDeclaratorName(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 43: // MethodBody -> Block
+{ CurrentSemanticValue = MakeMethodBody(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 44: // ConstructorDeclaration -> Modifiers, MethodDeclarator, Block
+{ CurrentSemanticValue = MakeConstructorDeclaration(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 45: // StaticInitializer -> STATIC, Block
+{ CurrentSemanticValue = MakeStaticInitializer(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 46: // Block -> LBRACE, LocalVariableDeclarationsAndStatements, RBRACE
+{ CurrentSemanticValue = MakeBlock(ValueStack[ValueStack.Depth-2]); }
+        break;
+      case 47: // Block -> LBRACE, RBRACE
+{ CurrentSemanticValue = MakeBlock(); }
+        break;
+      case 48: // LocalVariableDeclarationsAndStatements -> LocalVariableDeclarationOrStatement
+{ CurrentSemanticValue = MakeLocalVariableDeclarationsAndStatements(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 49: // LocalVariableDeclarationsAndStatements -> 
+               //                                           LocalVariableDeclarationsAndStatements, 
+               //                                           LocalVariableDeclarationOrStatement
+{ CurrentSemanticValue = MakeLocalVariableDeclarationsAndStatements(ValueStack[ValueStack.Depth-2], ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 50: // LocalVariableDeclarationOrStatement -> LocalVariableDeclarationStatement
+{ CurrentSemanticValue = MakeLocalVariableDeclarationOrStatement(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 51: // LocalVariableDeclarationOrStatement -> Statement
+{ CurrentSemanticValue = MakeLocalVariableDeclarationOrStatement(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 52: // LocalVariableDeclarationStatement -> TypeSpecifier, LocalVariableDeclarators, 
+               //                                      SEMICOLON
+{ CurrentSemanticValue = MakeLocalVariableDeclarationStatement(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-2]); }
+        break;
+      case 53: // LocalVariableDeclarationStatement -> StructDeclaration
+{ CurrentSemanticValue = MakeLocalVariableDeclarationStatement(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 54: // LocalVariableDeclarators -> LocalVariableDeclaratorName
+{ CurrentSemanticValue = MakeLocalVariableDeclarators(ValueStack[ValueStack.Depth-1]); }
+        break;
+      case 55: // LocalVariableDeclarators -> LocalVariableDeclarators, COMMA, 
+               //                             LocalVariableDeclaratorName
+{ CurrentSemanticValue = MakeLocalVariableDeclarators(ValueStack[ValueStack.Depth-3], ValueStack[ValueStack.Depth-1]); }
         break;
       case 109: // Identifier -> IDENTIFIER
 {  CurrentSemanticValue = MakeIdentifier(yytext); }

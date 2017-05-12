@@ -12,5 +12,6 @@ namespace ASTBuilder
         void Visit(ModifiersNode modNode);
         void Visit(IdentifierNode idNode);
         void Visit(PrimitiveTypeNode ptNode);
+        void Visit(StaticInitializerNode statNode);
     }
 }
