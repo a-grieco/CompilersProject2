@@ -157,18 +157,18 @@ LocalVariableDeclarators	:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableD
 
 							
 
-Statement					:	EmptyStatement
-							|	ExpressionStatement SEMICOLON
-							|	SelectionStatement
-							|	IterationStatement
-							|	ReturnStatement
-							|   Block
+Statement					:	EmptyStatement	{ $$ = MakeStatement($1); }
+							|	ExpressionStatement SEMICOLON	{ $$ = MakeStatement($1); }
+							|	SelectionStatement	{ $$ = MakeStatement($1); }
+							|	IterationStatement	{ $$ = MakeStatement($1); }
+							|	ReturnStatement	{ $$ = MakeStatement($1); }
+							|   Block	{ $$ = MakeStatement($1); }
 							;
 
-EmptyStatement				:	SEMICOLON
+EmptyStatement				:	SEMICOLON	{ $$ = MakeEmptyStatement(Token.SEMICOLON); }
 							;
 
-ExpressionStatement			:	Expression
+ExpressionStatement			:	Expression	{ $$ = MakeExpressionStatement($1); }
 							;
 
 /*
@@ -177,86 +177,86 @@ ExpressionStatement			:	Expression
  *
  */
 
-SelectionStatement			:	IF LPAREN Expression RPAREN Statement ELSE Statement
-//							|   IF LPAREN Expression RPAREN Statement
+SelectionStatement			:	IF LPAREN Expression RPAREN Statement ELSE Statement	{ $$ = MakeSelectionStatement($3, $5, $7); }
+							|   IF LPAREN Expression RPAREN Statement	{ $$ = MakeSelectionStatement($3, $5); }
 							;
 
 
-IterationStatement			:	WHILE LPAREN Expression RPAREN Statement
+IterationStatement			:	WHILE LPAREN Expression RPAREN Statement	{$$ = MakeIterationStatement($3, $5); }
 							;
 
-ReturnStatement				:	RETURN Expression SEMICOLON
-							|   RETURN            SEMICOLON
+ReturnStatement				:	RETURN Expression SEMICOLON	{ $$ = MakeReturnStatement($2); }
+							|   RETURN            SEMICOLON	{ $$ = MakeReturnStatement(); }
 							;
 
-ArgumentList				:	Expression
-							|   ArgumentList COMMA Expression
+ArgumentList				:	Expression	{ $$ = MakeArgumentList($1); }
+							|   ArgumentList COMMA Expression	{ $$ = MakeArgumentList($1, $3); }
 							;
 
 
-Expression					:	QualifiedName EQUALS Expression
-							|   Expression OP_LOR Expression   /* short-circuit OR */
-							|   Expression OP_LAND Expression   /* short-circuit AND */
-							|   Expression PIPE Expression
-							|   Expression HAT Expression
-							|   Expression AND Expression
-							|	Expression OP_EQ Expression
-							|   Expression OP_NE Expression
-							|	Expression OP_GT Expression
-							|	Expression OP_LT Expression
-							|	Expression OP_LE Expression
-							|	Expression OP_GE Expression
-							|   Expression PLUSOP Expression
-							|   Expression MINUSOP Expression
-							|	Expression ASTERISK Expression
-							|	Expression RSLASH Expression
-							|   Expression PERCENT Expression	/* remainder */
-							|	ArithmeticUnaryOperator Expression  %prec UNARY
-							|	PrimaryExpression
+Expression					:	QualifiedName EQUALS Expression	{ $$ = MakeExpression($1, ExpressionEnums.EQUALS, $3); }
+							|   Expression OP_LOR Expression	{ $$ = MakeExpression($1, ExpressionEnums.OP_LOR, $3); }	/* short-circuit OR */
+							|   Expression OP_LAND Expression	{ $$ = MakeExpression($1, ExpressionEnums.OP_LAND, $3); }	/* short-circuit AND */
+							|   Expression PIPE Expression		{ $$ = MakeExpression($1, ExpressionEnums.PIPE, $3); }
+							|   Expression HAT Expression		{ $$ = MakeExpression($1, ExpressionEnums.HAT, $3); }
+							|   Expression AND Expression		{ $$ = MakeExpression($1, ExpressionEnums.AND, $3); }
+							|	Expression OP_EQ Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_EQ, $3); }
+							|   Expression OP_NE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_NE, $3); }
+							|	Expression OP_GT Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_GT, $3); }
+							|	Expression OP_LT Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_LT, $3); }
+							|	Expression OP_LE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_LE, $3); }
+							|	Expression OP_GE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_GE, $3); }
+							|   Expression PLUSOP Expression	{ $$ = MakeExpression($1, ExpressionEnums.PLUSOP, $3); }
+							|   Expression MINUSOP Expression	{ $$ = MakeExpression($1, ExpressionEnums.MINUSOP, $3); }
+							|	Expression ASTERISK Expression	{ $$ = MakeExpression($1, ExpressionEnums.ASTERISK, $3); }
+							|	Expression RSLASH Expression	{ $$ = MakeExpression($1, ExpressionEnums.RSLASH, $3); }
+							|   Expression PERCENT Expression	{ $$ = MakeExpression($1, ExpressionEnums.PERCENT, $3); }	/* remainder */
+							|	ArithmeticUnaryOperator Expression  %prec UNARY { $$ = MakeExpression($1, $2, yytext, ExpressionEnums.UNARY); }	// TODO: fix me
+							|	PrimaryExpression	{ $$ = MakeExpression($1); }
 							;
 
-ArithmeticUnaryOperator		:	PLUSOP
-							|   MINUSOP
+ArithmeticUnaryOperator		:	PLUSOP	{ $$ = GetArithmeticUnaryOperator(ExpressionEnums.PLUSOP); }
+							|   MINUSOP	{ $$ = GetArithmeticUnaryOperator(ExpressionEnums.PLUSOP); }
 							;
 							
-PrimaryExpression			:	QualifiedName
-							|   NotJustName
+PrimaryExpression			:	QualifiedName	{$$ = MakePrimaryExpression($1); }
+							|   NotJustName		{$$ = MakePrimaryExpression($1); }
 							;
 
-NotJustName					:	SpecialName
-							|   ComplexPrimary
+NotJustName					:	SpecialName		{ $$ = MakeNotJustName($1); }
+							|   ComplexPrimary	{ $$ = MakeNotJustName($1); }
 							;
 
-ComplexPrimary				:	LPAREN Expression RPAREN
-							|   ComplexPrimaryNoParenthesis
+ComplexPrimary				:	LPAREN Expression RPAREN	{ $$ = MakeComplexPrimary($2); }
+							|   ComplexPrimaryNoParenthesis	{ $$ = MakeComplexPrimary($1); }
 							;
 
-ComplexPrimaryNoParenthesis	:	LITERAL
-							|   Number
-							|	FieldAccess
-							|	MethodCall
+ComplexPrimaryNoParenthesis	:	LITERAL		{ $$ = MakeComplexPrimaryNoParenthesis(yystringval); }
+							|   Number		{ $$ = MakeComplexPrimaryNoParenthesis($1); }
+							|	FieldAccess	{ $$ = MakeComplexPrimaryNoParenthesis($1); }
+							|	MethodCall	{ $$ = MakeComplexPrimaryNoParenthesis($1); }
 							;
 
-FieldAccess					:	NotJustName PERIOD Identifier
+FieldAccess					:	NotJustName PERIOD Identifier	{ $$ = MakeFieldAccess($1, $3); }
 							;		
 
-MethodCall					:	MethodReference LPAREN ArgumentList RPAREN
-							|   MethodReference LPAREN RPAREN
+MethodCall					:	MethodReference LPAREN ArgumentList RPAREN	{ $$ = MakeMethodCall($1, $3); }
+							|   MethodReference LPAREN RPAREN				{ $$ = MakeMethodCall($1); }
 							;
 
-MethodReference				:	ComplexPrimaryNoParenthesis
-							|	QualifiedName
-							|   SpecialName
+MethodReference				:	ComplexPrimaryNoParenthesis	{ $$ = MakeMethodReference($1); }
+							|	QualifiedName				{ $$ = MakeMethodReference($1); }
+							|   SpecialName					{ $$ = MakeMethodReference($1); }
 							;
 
-SpecialName					:	THIS
-							|	NULL
+SpecialName					:	THIS	{ $$ = GetSpecialName(yytext); }
+							|	NULL	{ $$ = GetSpecialName(yytext); }
 							;
 
-Identifier					:	IDENTIFIER	{  $$ = MakeIdentifier(yytext); }
+Identifier					:	IDENTIFIER	{  $$ = GetIdentifier(yytext); }
 							;
 
-Number						:	INT_NUMBER
+Number						:	INT_NUMBER	{ $$ = GetNumber(yytext); }
 							;
 
 %%
@@ -264,4 +264,9 @@ Number						:	INT_NUMBER
 public string yytext
 {
 	get { return((TCCLScanner)Scanner).yytext; }
+}
+
+public string yystringval
+{
+	get { return((TCCLScanner)Scanner).yystringval; }
 }

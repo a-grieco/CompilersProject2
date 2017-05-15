@@ -44,5 +44,36 @@ namespace ASTBuilder
             Console.WriteLine(statNode);
             Console.ResetColor();
         }
+
+        public void Visit(ExpressionNode expNode)
+        {
+            Console.Write(expNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(expNode);
+            Console.ResetColor();
+        }
+
+        public void Visit(ComplexPrimaryNoParenthesisNode cpnpNode)
+        {
+            if (cpnpNode.IsTerminal)
+            {
+                Console.Write(cpnpNode.Name + ": ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(cpnpNode);
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine("***fix this***");
+            }
+        }
+
+        public void Visit(SpecialNameNode snNode)
+        {
+            Console.Write(snNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(snNode);
+            Console.ResetColor();
+        }
     }
 }

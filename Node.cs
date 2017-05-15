@@ -386,7 +386,7 @@ namespace ASTBuilder
             }
         }
     }
-    
+
     public class ParameterListNode : AbstractNode
     {
         public override string Name
@@ -575,14 +575,14 @@ namespace ASTBuilder
         }
     }
 
-    public class LocalVariableDeclarationOrStatement : AbstractNode
+    public class LocalVariableDeclarationOrStatementNode : AbstractNode
     {
         public override string Name
         {
             get { return "LocalVariableDeclarationOrStatement"; }
         }
 
-        public LocalVariableDeclarationOrStatement(AbstractNode node)
+        public LocalVariableDeclarationOrStatementNode(AbstractNode node)
         {
             adoptChildren(node);
         }
@@ -627,4 +627,439 @@ namespace ASTBuilder
         }
     }
 
+    public class StatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "Statement"; }
+        }
+
+        public StatementNode(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class EmptyStatementNode : AbstractNode
+    {
+        // TODO: this seems unnecessary
+        private Token semicolon;
+
+        public override string Name
+        {
+            get { return "EmptyStatement"; }
+        }
+
+        public EmptyStatementNode(Token semicolon)
+        {
+            this.semicolon = semicolon;
+        }
+
+        public override string ToString()
+        {
+            return ";";
+        }
+    }
+
+    public class ExpressionStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ExpressionStatement"; }
+        }
+
+        public ExpressionStatementNode(AbstractNode expression)
+        {
+            adoptChildren(expression);
+        }
+    }
+
+    public class SelectionStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "SelectionStatement"; }
+        }
+
+        public SelectionStatementNode(AbstractNode expression, AbstractNode statement)
+        {
+            adoptChildren(expression);
+            adoptChildren(statement);
+        }
+
+        public SelectionStatementNode(AbstractNode expression, AbstractNode statementIf, AbstractNode statementElse)
+        {
+            adoptChildren(expression);
+            adoptChildren(statementIf);
+            adoptChildren(statementElse);
+        }
+    }
+
+    public class IterationStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "IterationStatement"; }
+        }
+
+        public IterationStatementNode(AbstractNode expression, AbstractNode statement)
+        {
+            adoptChildren(expression);
+            adoptChildren(statement);
+        }
+    }
+
+    public class ReturnStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ReturnStatement"; }
+        }
+
+        public ReturnStatementNode() { }
+
+        public ReturnStatementNode(AbstractNode expression)
+        {
+            adoptChildren(expression);
+        }
+    }
+
+    public class ArgumentListNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ArgumentList"; }
+        }
+
+        public ArgumentListNode(AbstractNode expression)
+        {
+            adoptChildren(expression);
+        }
+
+        public void AddExpression(AbstractNode expression)
+        {
+            adoptChildren(expression);
+        }
+    }
+
+    public class ExpressionNode : AbstractNode
+    {
+        private TCCLParser.ExpressionEnums _op;
+        private int _precision;
+        private TCCLParser.ExpressionEnums _arithmeticUnaryOperator;
+
+        public override string Name
+        {
+            get { return "Expression"; }
+        }
+
+        public ExpressionNode(AbstractNode primaryExpression)
+        {
+            adoptChildren(primaryExpression);
+        }
+
+        public ExpressionNode(AbstractNode lhs, TCCLParser.ExpressionEnums op, AbstractNode rhs)
+        {
+            _op = op;
+            adoptChildren(lhs);
+            adoptChildren(rhs);
+        }
+
+        // TODO: fix me (_precision may break, and arithmeticUnaryOperator should be a member, not a child
+        public ExpressionNode(AbstractNode arithmeticUnaryOperator, AbstractNode expression,
+            string prec, TCCLParser.ExpressionEnums op)
+        {
+            _op = op;
+            _precision = Int32.Parse(prec);
+            _arithmeticUnaryOperator = ((ArithmeticUnaryOperator)arithmeticUnaryOperator).GetOp;
+            adoptChildren(expression);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            string display = "";
+            switch (_arithmeticUnaryOperator)
+            {
+                case TCCLParser.ExpressionEnums.PLUSOP:
+                    display += "+ ";
+                    break;
+                case TCCLParser.ExpressionEnums.MINUSOP:
+                    display += "- ";
+                    break;
+            }
+            switch (_op)
+            {
+                case TCCLParser.ExpressionEnums.EQUALS:
+                    display += "=";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_LOR:
+                    display += "||";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_LAND:
+                    display += "&&";
+                    break;
+                case TCCLParser.ExpressionEnums.PIPE:
+                    display += "|";
+                    break;
+                case TCCLParser.ExpressionEnums.HAT:
+                    display += "^";
+                    break;
+                case TCCLParser.ExpressionEnums.AND:
+                    display += "&";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_EQ:
+                    display += "==";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_NE:
+                    display += "!=";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_GT:
+                    display += ">";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_LT:
+                    display += "<";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_LE:
+                    display += "<=";
+                    break;
+                case TCCLParser.ExpressionEnums.OP_GE:
+                    display += ">=";
+                    break;
+                case TCCLParser.ExpressionEnums.PLUSOP:
+                    display += "+";
+                    break;
+                case TCCLParser.ExpressionEnums.MINUSOP:
+                    display += "-";
+                    break;
+                case TCCLParser.ExpressionEnums.ASTERISK:
+                    display += "*";
+                    break;
+                case TCCLParser.ExpressionEnums.RSLASH:
+                    display += "/";
+                    break;
+                case TCCLParser.ExpressionEnums.PERCENT:
+                    display += "%";
+                    break;
+                case TCCLParser.ExpressionEnums.UNARY:
+                    display += "UNARY";
+                    break;
+            }
+            return display;
+        }
+    }
+
+    public class ArithmeticUnaryOperator : AbstractNode
+    {
+        private TCCLParser.ExpressionEnums op;
+
+        public TCCLParser.ExpressionEnums GetOp
+        {
+            get { return op; }
+        }
+
+        public ArithmeticUnaryOperator(TCCLParser.ExpressionEnums op)
+        {
+            this.op = op;
+        }
+    }
+
+    public class PrimaryExpressionNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "PrimaryExpression"; }
+        }
+
+        public PrimaryExpressionNode(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class NotJustNameNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "NotJustName"; }
+        }
+
+        public NotJustNameNode(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class ComplexPrimaryNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ComplexPrimaryNode"; }
+        }
+
+        public ComplexPrimaryNode(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class ComplexPrimaryNoParenthesisNode : AbstractNode
+    {
+        private bool _isLiteral;
+        private bool _isNumber;
+        private string _literal;
+        private int _number;
+
+        public bool IsTerminal
+        {
+            get { return (_isLiteral || _isNumber); }
+        }
+
+        public override string Name
+        {
+            get
+            {
+                if (_isLiteral)
+                {
+                    return "LITERAL";
+                }
+                else if (_isNumber)
+                {
+                    return "NUMBER";
+                }
+                return "ComplexPrimaryNoParenthesisNode";
+            }
+        }
+
+        public ComplexPrimaryNoParenthesisNode(string literal)
+        {
+            _isLiteral = true;
+            _isNumber = false;
+            _literal = literal;
+        }
+
+        public ComplexPrimaryNoParenthesisNode(int number)
+        {
+            _isLiteral = false;
+            _isNumber = true;
+            _number = number;
+        }
+
+        public ComplexPrimaryNoParenthesisNode(AbstractNode node)
+        {
+            _isLiteral = false;
+            _isNumber = false;
+            adoptChildren(node);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        // only display LITERAL or INT_NUMBER, blank if FieldAccess or MethodCall
+        public override string ToString()
+        {
+            string display = "";
+            if (_isLiteral)
+            {
+                display += _literal;
+            }
+            else if (_isNumber)
+            {
+                display += _number;
+            }
+            return display;
+        }
+    }
+
+    public class Number : AbstractNode
+    {
+        private int _number;
+
+        public int GetNumber
+        {
+            get { return _number; }
+        }
+
+        public Number(string intNumber)
+        {
+            _number = Int32.Parse(intNumber);
+        }
+    }
+
+    public class FieldAccessNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "FieldAccess"; }
+        }
+
+        public FieldAccessNode(AbstractNode notJustName, AbstractNode identifer)
+        {
+            adoptChildren(notJustName);
+            adoptChildren(identifer);
+        }
+    }
+
+    public class MethodCallNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "MethodCall"; }
+        }
+
+        public MethodCallNode(AbstractNode methodReference)
+        {
+            adoptChildren(methodReference);
+        }
+
+        public MethodCallNode(AbstractNode methodReference, AbstractNode argumentList)
+        {
+            adoptChildren(methodReference);
+            adoptChildren(argumentList);
+        }
+    }
+
+    public class MethodReferenceNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "MethodReference"; }
+        }
+
+        public MethodReferenceNode(AbstractNode node)
+        {
+            adoptChildren(node);
+        }
+    }
+
+    public class SpecialNameNode : AbstractNode
+    {
+        private string _specialName;
+
+        public override string Name
+        {
+            get { return "SpecialName"; }
+        }
+
+        public SpecialNameNode(string specialName)
+        {
+            _specialName = specialName;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return _specialName;
+        }
+    }
 }

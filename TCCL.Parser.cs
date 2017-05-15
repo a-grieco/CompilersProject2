@@ -38,7 +38,7 @@ namespace ASTBuilder
             // move left down the tree
             if (pNode.Child != null)
             {
-                _printTree(pNode.Child.First, pVisitor, indent + "   ");
+                _printTree(pNode.Child.First, pVisitor, indent + "  ");
             }
 
             // move across siblings

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ASTBuilder
 {
@@ -25,7 +28,7 @@ namespace ASTBuilder
             return mod;
         }
 
-        public static AbstractNode MakeIdentifier(string id)
+        public static AbstractNode GetIdentifier(string id)
         {
             return new IdentifierNode(id);
         }
@@ -210,7 +213,7 @@ namespace ASTBuilder
 
         public static AbstractNode MakeLocalVariableDeclarationOrStatement(AbstractNode node)
         {
-            return new LocalVariableDeclarationOrStatement(node);   // LocalVariableDeclarationStatment or Statment
+            return new LocalVariableDeclarationOrStatementNode(node);   // LocalVariableDeclarationStatment or Statment
         }
 
         public static AbstractNode MakeLocalVariableDeclarationStatement
@@ -237,7 +240,159 @@ namespace ASTBuilder
             return localVarDecls;
         }
 
-    }
+        public static AbstractNode MakeStatement(AbstractNode node)
+        {
+            return new StatementNode(node); // EmptyStatement, ExpressionStatement, SelectionStatement, IterationStatement, ReturnStatement, Block
+        }
 
-    
+        public static AbstractNode MakeEmptyStatement(Token semicolon)
+        {
+            return new EmptyStatementNode(semicolon);
+        }
+
+        public static AbstractNode MakeExpressionStatement(AbstractNode expression)
+        {
+            return new ExpressionStatementNode(expression);
+        }
+
+        public static AbstractNode MakeSelectionStatement(AbstractNode expression,
+            AbstractNode statement)
+        {
+            return new SelectionStatementNode(expression, statement);
+        }
+
+        public static AbstractNode MakeSelectionStatement(AbstractNode expression,
+            AbstractNode statementIf, AbstractNode statementElse)
+        {
+            return new SelectionStatementNode(expression, statementIf, statementElse);
+        }
+
+        public static AbstractNode MakeIterationStatement(AbstractNode expression,
+            AbstractNode statement)
+        {
+            return new IterationStatementNode(expression, statement);
+        }
+
+        public static AbstractNode MakeReturnStatement()
+        {
+            return new ReturnStatementNode();
+        }
+
+        public static AbstractNode MakeReturnStatement(AbstractNode expression)
+        {
+            return new ReturnStatementNode(expression);
+        }
+
+        public static AbstractNode MakeArgumentList(AbstractNode expression)
+        {
+            return new ArgumentListNode(expression);
+        }
+
+        public static AbstractNode MakeArgumentList(AbstractNode argumentList,
+            AbstractNode expression)
+        {
+            ((ArgumentListNode)argumentList).AddExpression(expression);
+            return argumentList;
+        }
+
+        public enum ExpressionEnums
+        {
+            EQUALS, OP_LOR, OP_LAND, PIPE, HAT, AND, OP_EQ, OP_NE, OP_GT, OP_LT,
+            OP_LE, OP_GE, PLUSOP, MINUSOP, ASTERISK, RSLASH, PERCENT, UNARY
+        }
+        public static AbstractNode MakeExpression(AbstractNode primaryExpression)
+        {
+            return new ExpressionNode(primaryExpression);
+        }
+
+        public static AbstractNode MakeExpression(AbstractNode lhs, ExpressionEnums op, AbstractNode rhs)
+        {
+            return new ExpressionNode(lhs, op, rhs);
+        }
+
+        public static AbstractNode MakeExpression(AbstractNode arithmeticUnaryOperator,
+            AbstractNode expression, string prec, ExpressionEnums op)
+        {
+            return new ExpressionNode(arithmeticUnaryOperator, expression, prec, op);
+        }
+
+        public static AbstractNode GetArithmeticUnaryOperator(ExpressionEnums op)
+        {
+            return new ArithmeticUnaryOperator(op);
+        }
+
+        public static AbstractNode MakePrimaryExpression(AbstractNode node)
+        {
+            return new PrimaryExpressionNode(node); // QualifiedName, NotJustName
+        }
+
+        public static AbstractNode MakeNotJustName(AbstractNode node)
+        {
+            return new NotJustNameNode(node);   // SpecialName, ComplexPrimary
+        }
+
+        public static AbstractNode MakeComplexPrimary(AbstractNode node)
+        {
+            return new ComplexPrimaryNode(node);    // (Expression), ComplexPrimaryNoParenthesis
+        }
+
+        public static AbstractNode MakeComplexPrimaryNoParenthesis(string literal)
+        {
+            return new ComplexPrimaryNoParenthesisNode(literal);
+        }
+
+        //public static AbstractNode MakeComplexPrimaryNoParenthesis(int number)
+        //{
+        //    return new ComplexPrimaryNoParenthesisNode(number);
+        //}
+
+        //public static AbstractNode MakeComplexPrimaryNoParenthesis(Number num)
+        //{
+        //    return new ComplexPrimaryNoParenthesisNode(num.GetNumber);
+        //}
+
+        public static AbstractNode MakeComplexPrimaryNoParenthesis(AbstractNode node)
+        {
+            if (node.whatAmI().Equals("Number"))
+            {
+                return new ComplexPrimaryNoParenthesisNode(((Number)node).GetNumber);
+            }
+            else
+            {
+                return new ComplexPrimaryNoParenthesisNode(node);
+            }
+            // FieldAccess, MethodCall
+        }
+
+        public static AbstractNode GetNumber(string intNumber)
+        {
+            return new Number(intNumber);
+        }
+
+        public static AbstractNode MakeFieldAccess(AbstractNode notJustName, AbstractNode identifer)
+        {
+            return new FieldAccessNode(notJustName, identifer);
+        }
+
+        public static AbstractNode MakeMethodCall(AbstractNode methodReference)
+        {
+            return new MethodCallNode(methodReference);
+        }
+
+        public static AbstractNode MakeMethodCall(AbstractNode methodReference, AbstractNode argumentList)
+        {
+            return new MethodCallNode(methodReference, argumentList);
+        }
+
+        public static AbstractNode MakeMethodReference(AbstractNode node)
+        {
+            return new MethodReferenceNode(node);   // ComplexPrimaryNoParenthesis,
+                                                    // QualifiedName, SpecialName
+        }
+
+        public static AbstractNode GetSpecialName(string specialName)
+        {
+            return new SpecialNameNode(specialName);
+        }
+    }
 }

@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <TCCL.grammar.y - 5/11/2017 11:19:15 PM>
+//  GPPG error listing for yacc source file <TCCL.grammar.y - 5/15/2017 11:59:45 AM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  HPERSIMMON
-//  DateTime: 5/11/2017 11:19:17 PM
+//  DateTime: 5/15/2017 11:59:46 AM
 //  UserName: amgrieco
 // ==========================================================================
 
@@ -37,6 +37,8 @@
 %left  UNARY 
 
 %%
+// Warning: NonTerminal symbol "ArithmeticUnaryOperator" is unreachable
+// --------------------------------------------------------------------
 
 CompilationUnit		:	ClassDeclaration	{ $$ = MakeCompilationUnit($1); }
 					;
@@ -162,29 +164,24 @@ LocalVariableDeclarationStatement	:	TypeSpecifier LocalVariableDeclarators SEMIC
 									|   StructDeclaration	{ $$ = MakeLocalVariableDeclarationStatement($1); }                  						
 									;
 
-``		:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1); }
-//-^^
-// Error: This character is invalid in this context
-// Error: This character is invalid in this context
-// Error: Syntax error, unexpected ':', expecting %%, or anchoredSymbol, or EOF
-// ----------------------------------------------------------------------------
+LocalVariableDeclarators	:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1); }
 							|   LocalVariableDeclarators COMMA LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1, $3); }
 							;
 
 							
 
-Statement					:	EmptyStatement
-							|	ExpressionStatement SEMICOLON
-							|	SelectionStatement
-							|	IterationStatement
-							|	ReturnStatement
-							|   Block
+Statement					:	EmptyStatement	{ $$ = MakeStatement($1); }
+							|	ExpressionStatement SEMICOLON	{ $$ = MakeStatement($1); }
+							|	SelectionStatement	{ $$ = MakeStatement($1); }
+							|	IterationStatement	{ $$ = MakeStatement($1); }
+							|	ReturnStatement	{ $$ = MakeStatement($1); }
+							|   Block	{ $$ = MakeStatement($1); }
 							;
 
-EmptyStatement				:	SEMICOLON
+EmptyStatement				:	SEMICOLON	{ $$ = MakeEmptyStatement(Token.SEMICOLON); }
 							;
 
-ExpressionStatement			:	Expression
+ExpressionStatement			:	Expression	{ $$ = MakeExpressionStatement($1); }
 							;
 
 /*
@@ -193,42 +190,42 @@ ExpressionStatement			:	Expression
  *
  */
 
-SelectionStatement			:	IF LPAREN Expression RPAREN Statement ELSE Statement
-//							|   IF LPAREN Expression RPAREN Statement
+SelectionStatement			:	IF LPAREN Expression RPAREN Statement ELSE Statement	{ $$ = MakeSelectionStatement($3, $5, $7); }
+							|   IF LPAREN Expression RPAREN Statement	{ $$ = MakeSelectionStatement($3, $5); }
 							;
 
 
-IterationStatement			:	WHILE LPAREN Expression RPAREN Statement
+IterationStatement			:	WHILE LPAREN Expression RPAREN Statement	{$$ = MakeIterationStatement($3, $5); }
 							;
 
-ReturnStatement				:	RETURN Expression SEMICOLON
-							|   RETURN            SEMICOLON
+ReturnStatement				:	RETURN Expression SEMICOLON	{ $$ = MakeReturnStatement($2); }
+							|   RETURN            SEMICOLON	{ $$ = MakeReturnStatement(); }
 							;
 
-ArgumentList				:	Expression
-							|   ArgumentList COMMA Expression
+ArgumentList				:	Expression	{ $$ = MakeArgumentList($1); }
+							|   ArgumentList COMMA Expression	{ $$ = MakeArgumentList($1, $3); }
 							;
 
 
-Expression					:	QualifiedName EQUALS Expression
-							|   Expression OP_LOR Expression   /* short-circuit OR */
-							|   Expression OP_LAND Expression   /* short-circuit AND */
-							|   Expression PIPE Expression
-							|   Expression HAT Expression
-							|   Expression AND Expression
-							|	Expression OP_EQ Expression
-							|   Expression OP_NE Expression
-							|	Expression OP_GT Expression
-							|	Expression OP_LT Expression
-							|	Expression OP_LE Expression
-							|	Expression OP_GE Expression
-							|   Expression PLUSOP Expression
-							|   Expression MINUSOP Expression
-							|	Expression ASTERISK Expression
-							|	Expression RSLASH Expression
-							|   Expression PERCENT Expression	/* remainder */
-							|	ArithmeticUnaryOperator Expression  %prec UNARY
-							|	PrimaryExpression
+Expression					:	QualifiedName EQUALS Expression	{ $$ = MakeExpression($1, ExpressionEnums.EQUALS, $3); }
+							|   Expression OP_LOR Expression	{ $$ = MakeExpression($1, ExpressionEnums.OP_LOR, $3); }	/* short-circuit OR */
+							|   Expression OP_LAND Expression	{ $$ = MakeExpression($1, ExpressionEnums.OP_LAND, $3); }	/* short-circuit AND */
+							|   Expression PIPE Expression		{ $$ = MakeExpression($1, ExpressionEnums.PIPE, $3); }
+							|   Expression HAT Expression		{ $$ = MakeExpression($1, ExpressionEnums.HAT, $3); }
+							|   Expression AND Expression		{ $$ = MakeExpression($1, ExpressionEnums.AND, $3); }
+							|	Expression OP_EQ Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_EQ, $3); }
+							|   Expression OP_NE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_NE, $3); }
+							|	Expression OP_GT Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_GT, $3); }
+							|	Expression OP_LT Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_LT, $3); }
+							|	Expression OP_LE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_LE, $3); }
+							|	Expression OP_GE Expression		{ $$ = MakeExpression($1, ExpressionEnums.OP_GE, $3); }
+							|   Expression PLUSOP Expression	{ $$ = MakeExpression($1, ExpressionEnums.PLUSOP, $3); }
+							|   Expression MINUSOP Expression	{ $$ = MakeExpression($1, ExpressionEnums.MINUSOP, $3); }
+							|	Expression ASTERISK Expression	{ $$ = MakeExpression($1, ExpressionEnums.ASTERISK, $3); }
+							|	Expression RSLASH Expression	{ $$ = MakeExpression($1, ExpressionEnums.RSLASH, $3); }
+							|   Expression PERCENT Expression	{ $$ = MakeExpression($1, ExpressionEnums.PERCENT, $3); }	/* remainder */
+//							|	ArithmeticUnaryOperator Expression  %prec UNARY { $$ = MakeExpression($1, $2, yytext, ExpressionEnums.UNARY); }	// TODO: fix me
+							|	PrimaryExpression	{ $$ = MakeExpression($1); }
 							;
 
 ArithmeticUnaryOperator		:	PLUSOP

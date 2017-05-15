@@ -13,5 +13,8 @@ namespace ASTBuilder
         void Visit(IdentifierNode idNode);
         void Visit(PrimitiveTypeNode ptNode);
         void Visit(StaticInitializerNode statNode);
+        void Visit(ExpressionNode expNode);
+        void Visit(ComplexPrimaryNoParenthesisNode cpnpNode);
+        void Visit(SpecialNameNode snNode);
     }
 }
