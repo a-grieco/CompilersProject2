@@ -16,5 +16,7 @@ namespace ASTBuilder
         void Visit(ExpressionNode expNode);
         void Visit(ComplexPrimaryNoParenthesisNode cpnpNode);
         void Visit(SpecialNameNode snNode);
+        void Visit(LiteralNode litNode);
+        void Visit(NumberNode numNode);
     }
 }

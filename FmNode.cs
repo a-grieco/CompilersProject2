@@ -255,16 +255,26 @@ namespace ASTBuilder
             return new ExpressionStatementNode(expression);
         }
 
-        public static AbstractNode MakeSelectionStatement(AbstractNode expression,
-            AbstractNode statement)
+        public static AbstractNode MakeSelectionStatement(AbstractNode ifExpression,
+            AbstractNode thenStatement)
         {
-            return new SelectionStatementNode(expression, statement);
+            //return new SelectionStatementNode(expression, statement);
+            SelectionStatementNode ssNode = new SelectionStatementNode(ifExpression);
+            ThenStatementNode tsNode = new ThenStatementNode(thenStatement);
+            ssNode.AddStatement(tsNode);
+            return ssNode;
         }
 
-        public static AbstractNode MakeSelectionStatement(AbstractNode expression,
-            AbstractNode statementIf, AbstractNode statementElse)
+        public static AbstractNode MakeSelectionStatement(AbstractNode ifExpression,
+            AbstractNode thenStatement, AbstractNode elseStatement)
         {
-            return new SelectionStatementNode(expression, statementIf, statementElse);
+            //return new SelectionStatementNode(expression, statementIf, statementElse);
+            SelectionStatementNode ssNode = new SelectionStatementNode(ifExpression);
+            ThenStatementNode tsNode = new ThenStatementNode(thenStatement);
+            ElseStatementNode esNode = new ElseStatementNode(elseStatement);
+            ssNode.AddStatement(tsNode);
+            ssNode.AddStatement(esNode);
+            return ssNode;
         }
 
         public static AbstractNode MakeIterationStatement(AbstractNode expression,
@@ -341,21 +351,11 @@ namespace ASTBuilder
             return new ComplexPrimaryNoParenthesisNode(literal);
         }
 
-        //public static AbstractNode MakeComplexPrimaryNoParenthesis(int number)
-        //{
-        //    return new ComplexPrimaryNoParenthesisNode(number);
-        //}
-
-        //public static AbstractNode MakeComplexPrimaryNoParenthesis(Number num)
-        //{
-        //    return new ComplexPrimaryNoParenthesisNode(num.GetNumber);
-        //}
-
         public static AbstractNode MakeComplexPrimaryNoParenthesis(AbstractNode node)
         {
             if (node.whatAmI().Equals("Number"))
             {
-                return new ComplexPrimaryNoParenthesisNode(((Number)node).GetNumber);
+                return new ComplexPrimaryNoParenthesisNode(((NumberNode)node).GetNumber);
             }
             else
             {
@@ -366,7 +366,7 @@ namespace ASTBuilder
 
         public static AbstractNode GetNumber(string intNumber)
         {
-            return new Number(intNumber);
+            return new NumberNode(intNumber);
         }
 
         public static AbstractNode MakeFieldAccess(AbstractNode notJustName, AbstractNode identifer)
@@ -393,6 +393,36 @@ namespace ASTBuilder
         public static AbstractNode GetSpecialName(string specialName)
         {
             return new SpecialNameNode(specialName);
+        }
+
+        public static AbstractNode GetLiteral(string literal)
+        {
+            return new LiteralNode(literal);
+        }
+    }
+
+    public class LiteralNode : AbstractNode
+    {
+        private string _literal;
+
+        public override string Name
+        {
+            get { return "LITERAL"; }
+        }
+
+        public LiteralNode(string literal)
+        {
+            _literal = literal;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return _literal;
         }
     }
 }

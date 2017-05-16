@@ -42,18 +42,18 @@ Modifiers			:	PUBLIC		{ $$ = MakeModifiers(Token.PUBLIC); }
 					;
 
 ClassBody			:	LBRACE FieldDeclarations RBRACE	{ $$ = MakeClassBody($2); }
-					|	LBRACE RBRACE	{ $$ = MakeClassBody(); }
+					|	LBRACE RBRACE					{ $$ = MakeClassBody(); }
 					;
 
-FieldDeclarations	:	FieldDeclaration	{ $$ = MakeFieldDeclarations($1); }
-					|	FieldDeclarations FieldDeclaration { $$ = MakeFieldDeclarations($1, $2); }
+FieldDeclarations	:	FieldDeclaration					{ $$ = MakeFieldDeclarations($1); }
+					|	FieldDeclarations FieldDeclaration	{ $$ = MakeFieldDeclarations($1, $2); }
 					;
 
-FieldDeclaration	:	FieldVariableDeclaration SEMICOLON	{ $$ = MakeFieldDeclaration($1); }
-					|	MethodDeclaration	{ $$ = MakeFieldDeclaration($1); }
-					|	ConstructorDeclaration	{ $$ = MakeFieldDeclaration($1); }
-					|	StaticInitializer	{ $$ = MakeFieldDeclaration($1); }
-					|	StructDeclaration	{ $$ = MakeFieldDeclaration($1); }
+FieldDeclaration	:	FieldVariableDeclaration SEMICOLON	{ $$ = $1; }	//{ $$ = MakeFieldDeclaration($1); }
+					|	MethodDeclaration					{ $$ = $1; }	//{ $$ = MakeFieldDeclaration($1); }
+					|	ConstructorDeclaration				{ $$ = $1; }	//{ $$ = MakeFieldDeclaration($1); }
+					|	StaticInitializer					{ $$ = $1; }	//{ $$ = MakeFieldDeclaration($1); }
+					|	StructDeclaration					{ $$ = $1; }	//{ $$ = MakeFieldDeclaration($1); }
 					;
 
 StructDeclaration	:	Modifiers STRUCT Identifier ClassBody	{ $$ = MakeStructDecl($1, $3, $4); }
@@ -71,12 +71,12 @@ StructDeclaration	:	Modifiers STRUCT Identifier ClassBody	{ $$ = MakeStructDecl(
 FieldVariableDeclaration	:	Modifiers TypeSpecifier FieldVariableDeclarators	{ $$ = MakeFieldVariableDeclaration($1, $2, $3); }
 							;
 
-TypeSpecifier				:	TypeName	{ $$ = MakeTypeSpecifier($1); }
-							| 	ArraySpecifier	{ $$ = MakeTypeSpecifier($1); }
+TypeSpecifier				:	TypeName		{ $$ = $1; }	//{ $$ = MakeTypeSpecifier($1); }
+							| 	ArraySpecifier	{ $$ = $1; }	//{ $$ = MakeTypeSpecifier($1); }
 							;
 
-TypeName					:	PrimitiveType	{ $$ = MakeTypeName($1); }
-							|   QualifiedName	{ $$ = MakeTypeName($1); }
+TypeName					:	PrimitiveType	{ $$ = $1; }	//{ $$ = MakeTypeName($1); }
+							|   QualifiedName	{ $$ = $1; }	//{ $$ = MakeTypeName($1); }
 							;
 
 ArraySpecifier				: 	TypeName LBRACKET RBRACKET	{ $$ = MakeArraySpecifier($1); }
@@ -87,7 +87,7 @@ PrimitiveType				:	BOOLEAN	{ $$ = MakePrimitiveType(PrimitiveEnums.BOOLEAN); }
 							|	VOID	{ $$ = MakePrimitiveType(PrimitiveEnums.VOID); }
 							;
 
-FieldVariableDeclarators	:	FieldVariableDeclaratorName	{ $$ = MakeFieldVariableDeclarators($1); }
+FieldVariableDeclarators	:	FieldVariableDeclaratorName	{ $$ = $1; }	//{ $$ = MakeFieldVariableDeclarators($1); }
 							|   FieldVariableDeclarators COMMA FieldVariableDeclaratorName	{ $$ = MakeFieldVariableDeclarators($1, $3); }
 							;
 
@@ -96,33 +96,33 @@ MethodDeclaration			:	Modifiers TypeSpecifier MethodDeclarator MethodBody	{ $$ =
 							;
 
 MethodDeclarator			:	MethodDeclaratorName LPAREN ParameterList RPAREN	{ $$ = MakeMethodDeclarator($1, $3); }
-							|   MethodDeclaratorName LPAREN RPAREN	{ $$ = MakeMethodDeclarator($1); }
+							|   MethodDeclaratorName LPAREN RPAREN					{ $$ = $1; }	//{ $$ = MakeMethodDeclarator($1); }
 							;
 
-ParameterList				:	Parameter	{$$ = MakeParameterList($1); }
-							|   ParameterList COMMA Parameter	{$$ = MakeParameterList($1, $3); }
+ParameterList				:	Parameter						{$$=$1;}//{ $$ = MakeParameterList($1); }
+							|   ParameterList COMMA Parameter	{ $$ = MakeParameterList($1, $3); }
 							;
 
 Parameter					:	TypeSpecifier DeclaratorName	{ $$ = MakeParameter($1, $2); }
 							;
 
-QualifiedName				:	Identifier	{ $$ = MakeQualifiedName($1); }
+QualifiedName				:	Identifier						{ $$ = MakeQualifiedName($1); }
 							|	QualifiedName PERIOD Identifier	{ $$ = MakeQualifiedName($1, $3); }
 							;
 
-DeclaratorName				:	Identifier	{ $$ = MakeDeclaratorName($1); }
+DeclaratorName				:	Identifier	{ $$ = $1; }	//{ $$ = MakeDeclaratorName($1); }
 							;
 
-MethodDeclaratorName		:	Identifier	{ $$ = MakeMethodDeclaratorName($1); }
+MethodDeclaratorName		:	Identifier	{ $$ = $1; }	//{ $$ = MakeMethodDeclaratorName($1); }
 							;
 
-FieldVariableDeclaratorName	:	Identifier	{ $$ = MakeFieldVariableDeclaratorName($1); }
+FieldVariableDeclaratorName	:	Identifier	{ $$ = $1; }	//{ $$ = MakeFieldVariableDeclaratorName($1); }
 							;
 
-LocalVariableDeclaratorName	:	Identifier	{ $$ = MakeLocalVariableDeclaratorName($1); }
+LocalVariableDeclaratorName	:	Identifier	{ $$ = $1; }	//{ $$ = MakeLocalVariableDeclaratorName($1); }
 							;
 
-MethodBody					:	Block	{ $$ = MakeMethodBody($1); }
+MethodBody					:	Block		{ $$ = $1; }	//{ $$ = MakeMethodBody($1); }
 							;
 
 ConstructorDeclaration		:	Modifiers MethodDeclarator Block	{ $$ = MakeConstructorDeclaration($1, $2, $3); }
@@ -143,12 +143,12 @@ LocalVariableDeclarationsAndStatements	:	LocalVariableDeclarationOrStatement	{ $
 										|   LocalVariableDeclarationsAndStatements LocalVariableDeclarationOrStatement	{ $$ = MakeLocalVariableDeclarationsAndStatements($1, $2); }
 										;
 
-LocalVariableDeclarationOrStatement	:	LocalVariableDeclarationStatement	{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
-									|   Statement	{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
+LocalVariableDeclarationOrStatement	:	LocalVariableDeclarationStatement	{ $$ = $1; }	//{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
+									|   Statement							{ $$ = $1; }	//{ $$ = MakeLocalVariableDeclarationOrStatement($1); }
 									;
 
 LocalVariableDeclarationStatement	:	TypeSpecifier LocalVariableDeclarators SEMICOLON	{ $$ = MakeLocalVariableDeclarationStatement($1, $2); }
-									|   StructDeclaration	{ $$ = MakeLocalVariableDeclarationStatement($1); }                  						
+									|   StructDeclaration									{ $$ = MakeLocalVariableDeclarationStatement($1); }                  						
 									;
 
 LocalVariableDeclarators	:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableDeclarators($1); }
@@ -157,18 +157,18 @@ LocalVariableDeclarators	:	LocalVariableDeclaratorName	{ $$ = MakeLocalVariableD
 
 							
 
-Statement					:	EmptyStatement	{ $$ = MakeStatement($1); }
-							|	ExpressionStatement SEMICOLON	{ $$ = MakeStatement($1); }
-							|	SelectionStatement	{ $$ = MakeStatement($1); }
-							|	IterationStatement	{ $$ = MakeStatement($1); }
-							|	ReturnStatement	{ $$ = MakeStatement($1); }
-							|   Block	{ $$ = MakeStatement($1); }
+Statement					:	EmptyStatement					{ $$ = $1; }	//{ $$ = MakeStatement($1); }
+							|	ExpressionStatement SEMICOLON	{ $$ = $1; }	//{ $$ = MakeStatement($1); }
+							|	SelectionStatement				{ $$ = $1; }	//{ $$ = MakeStatement($1); }
+							|	IterationStatement				{ $$ = $1; }	//{ $$ = MakeStatement($1); }
+							|	ReturnStatement					{ $$ = $1; }	//{ $$ = MakeStatement($1); }
+							|   Block							{ $$ = $1; }	//{ $$ = MakeStatement($1); }
 							;
 
 EmptyStatement				:	SEMICOLON	{ $$ = MakeEmptyStatement(Token.SEMICOLON); }
 							;
 
-ExpressionStatement			:	Expression	{ $$ = MakeExpressionStatement($1); }
+ExpressionStatement			:	Expression	{ $$ = $1; }	//{ $$ = MakeExpressionStatement($1); }
 							;
 
 /*
@@ -189,7 +189,7 @@ ReturnStatement				:	RETURN Expression SEMICOLON	{ $$ = MakeReturnStatement($2);
 							|   RETURN            SEMICOLON	{ $$ = MakeReturnStatement(); }
 							;
 
-ArgumentList				:	Expression	{ $$ = MakeArgumentList($1); }
+ArgumentList				:	Expression						{ $$ = MakeArgumentList($1); }
 							|   ArgumentList COMMA Expression	{ $$ = MakeArgumentList($1, $3); }
 							;
 
@@ -212,29 +212,29 @@ Expression					:	QualifiedName EQUALS Expression	{ $$ = MakeExpression($1, Expre
 							|	Expression RSLASH Expression	{ $$ = MakeExpression($1, ExpressionEnums.RSLASH, $3); }
 							|   Expression PERCENT Expression	{ $$ = MakeExpression($1, ExpressionEnums.PERCENT, $3); }	/* remainder */
 							|	ArithmeticUnaryOperator Expression  %prec UNARY { $$ = MakeExpression($1, $2, yytext, ExpressionEnums.UNARY); }	// TODO: fix me
-							|	PrimaryExpression	{ $$ = MakeExpression($1); }
+							|	PrimaryExpression	{ $$ = $1; }	//{ $$ = MakeExpression($1); }
 							;
 
 ArithmeticUnaryOperator		:	PLUSOP	{ $$ = GetArithmeticUnaryOperator(ExpressionEnums.PLUSOP); }
 							|   MINUSOP	{ $$ = GetArithmeticUnaryOperator(ExpressionEnums.PLUSOP); }
 							;
 							
-PrimaryExpression			:	QualifiedName	{$$ = MakePrimaryExpression($1); }
-							|   NotJustName		{$$ = MakePrimaryExpression($1); }
+PrimaryExpression			:	QualifiedName	{ $$ = $1; }	//{$$ = MakePrimaryExpression($1); }
+							|   NotJustName		{ $$ = $1; }	//{$$ = MakePrimaryExpression($1); }
 							;
 
-NotJustName					:	SpecialName		{ $$ = MakeNotJustName($1); }
-							|   ComplexPrimary	{ $$ = MakeNotJustName($1); }
+NotJustName					:	SpecialName		{ $$ = $1; }	//{ $$ = MakeNotJustName($1); }
+							|   ComplexPrimary	{ $$ = $1; }	//{ $$ = MakeNotJustName($1); }
 							;
 
-ComplexPrimary				:	LPAREN Expression RPAREN	{ $$ = MakeComplexPrimary($2); }
-							|   ComplexPrimaryNoParenthesis	{ $$ = MakeComplexPrimary($1); }
+ComplexPrimary				:	LPAREN Expression RPAREN	{ $$ = $2; }	//{ $$ = MakeComplexPrimary($2); }
+							|   ComplexPrimaryNoParenthesis	{ $$ = $1; }	//{ $$ = MakeComplexPrimary($1); }
 							;
 
-ComplexPrimaryNoParenthesis	:	LITERAL		{ $$ = MakeComplexPrimaryNoParenthesis(yystringval); }
-							|   Number		{ $$ = MakeComplexPrimaryNoParenthesis($1); }
-							|	FieldAccess	{ $$ = MakeComplexPrimaryNoParenthesis($1); }
-							|	MethodCall	{ $$ = MakeComplexPrimaryNoParenthesis($1); }
+ComplexPrimaryNoParenthesis	:	LITERAL		{ $$ = GetLiteral(yystringval); }	//{ $$ = MakeComplexPrimaryNoParenthesis(yystringval); }
+							|   Number		{ $$ = $1; }	//{ $$ = MakeComplexPrimaryNoParenthesis($1); }
+							|	FieldAccess	{ $$ = $1; }	//{ $$ = MakeComplexPrimaryNoParenthesis($1); }
+							|	MethodCall	{ $$ = $1; }	//{ $$ = MakeComplexPrimaryNoParenthesis($1); }
 							;
 
 FieldAccess					:	NotJustName PERIOD Identifier	{ $$ = MakeFieldAccess($1, $3); }
@@ -244,9 +244,9 @@ MethodCall					:	MethodReference LPAREN ArgumentList RPAREN	{ $$ = MakeMethodCal
 							|   MethodReference LPAREN RPAREN				{ $$ = MakeMethodCall($1); }
 							;
 
-MethodReference				:	ComplexPrimaryNoParenthesis	{ $$ = MakeMethodReference($1); }
-							|	QualifiedName				{ $$ = MakeMethodReference($1); }
-							|   SpecialName					{ $$ = MakeMethodReference($1); }
+MethodReference				:	ComplexPrimaryNoParenthesis	{ $$ = $1; }	//{ $$ = MakeMethodReference($1); }
+							|	QualifiedName				{ $$ = $1; }	//{ $$ = MakeMethodReference($1); }
+							|   SpecialName					{ $$ = $1; }	//{ $$ = MakeMethodReference($1); }
 							;
 
 SpecialName					:	THIS	{ $$ = GetSpecialName(yytext); }

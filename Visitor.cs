@@ -75,5 +75,21 @@ namespace ASTBuilder
             Console.WriteLine(snNode);
             Console.ResetColor();
         }
+
+        public void Visit(LiteralNode litNode)
+        {
+            Console.Write(litNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(litNode);
+            Console.ResetColor();
+        }
+
+        public void Visit(NumberNode numNode)
+        {
+            Console.Write(numNode.Name + ": ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(numNode);
+            Console.ResetColor();
+        }
     }
 }

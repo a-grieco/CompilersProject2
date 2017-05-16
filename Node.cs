@@ -678,20 +678,50 @@ namespace ASTBuilder
     {
         public override string Name
         {
-            get { return "SelectionStatement"; }
+            get { return "IfSelectionStatement"; }
         }
 
-        public SelectionStatementNode(AbstractNode expression, AbstractNode statement)
+        public SelectionStatementNode(AbstractNode ifExpression)
         {
-            adoptChildren(expression);
-            adoptChildren(statement);
+            adoptChildren(ifExpression);
         }
 
-        public SelectionStatementNode(AbstractNode expression, AbstractNode statementIf, AbstractNode statementElse)
+        //public SelectionStatementNode(AbstractNode ifExpression, AbstractNode statementIf, AbstractNode statementElse)
+        //{
+        //    adoptChildren(ifExpression);
+        //    adoptChildren(statementIf);
+        //    adoptChildren(statementElse);
+        //}
+
+        public void AddStatement(AbstractNode thenStatement)
         {
-            adoptChildren(expression);
-            adoptChildren(statementIf);
-            adoptChildren(statementElse);
+            adoptChildren(thenStatement);
+        }
+    }
+
+    public class ThenStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ThenStatement"; }
+        }
+
+        public ThenStatementNode(AbstractNode thenStatement)
+        {
+            adoptChildren(thenStatement);
+        }
+    }
+
+    public class ElseStatementNode : AbstractNode
+    {
+        public override string Name
+        {
+            get { return "ElseStatement"; }
+        }
+
+        public ElseStatementNode(AbstractNode elseStatement)
+        {
+            adoptChildren(elseStatement);
         }
     }
 
@@ -795,55 +825,55 @@ namespace ASTBuilder
             switch (_op)
             {
                 case TCCLParser.ExpressionEnums.EQUALS:
-                    display += "=";
+                    display += "EQUALS";
                     break;
                 case TCCLParser.ExpressionEnums.OP_LOR:
-                    display += "||";
+                    display += "OP_LOR";
                     break;
                 case TCCLParser.ExpressionEnums.OP_LAND:
-                    display += "&&";
+                    display += "OP_LAND";
                     break;
                 case TCCLParser.ExpressionEnums.PIPE:
-                    display += "|";
+                    display += "PIPE";
                     break;
                 case TCCLParser.ExpressionEnums.HAT:
-                    display += "^";
+                    display += "HAT";
                     break;
                 case TCCLParser.ExpressionEnums.AND:
-                    display += "&";
+                    display += "AND";
                     break;
                 case TCCLParser.ExpressionEnums.OP_EQ:
-                    display += "==";
+                    display += "OP_EQ";
                     break;
                 case TCCLParser.ExpressionEnums.OP_NE:
-                    display += "!=";
+                    display += "OP_NE";
                     break;
                 case TCCLParser.ExpressionEnums.OP_GT:
-                    display += ">";
+                    display += "OP_GT";
                     break;
                 case TCCLParser.ExpressionEnums.OP_LT:
-                    display += "<";
+                    display += "OP_LT";
                     break;
                 case TCCLParser.ExpressionEnums.OP_LE:
-                    display += "<=";
+                    display += "OP_LE";
                     break;
                 case TCCLParser.ExpressionEnums.OP_GE:
-                    display += ">=";
+                    display += "OP_GE";
                     break;
                 case TCCLParser.ExpressionEnums.PLUSOP:
-                    display += "+";
+                    display += "PLUSOP";
                     break;
                 case TCCLParser.ExpressionEnums.MINUSOP:
-                    display += "-";
+                    display += "MINUSOP";
                     break;
                 case TCCLParser.ExpressionEnums.ASTERISK:
-                    display += "*";
+                    display += "ASTERISK";
                     break;
                 case TCCLParser.ExpressionEnums.RSLASH:
-                    display += "/";
+                    display += "RSLASH";
                     break;
                 case TCCLParser.ExpressionEnums.PERCENT:
-                    display += "%";
+                    display += "PERCENT";
                     break;
                 case TCCLParser.ExpressionEnums.UNARY:
                     display += "UNARY";
@@ -977,18 +1007,33 @@ namespace ASTBuilder
         }
     }
 
-    public class Number : AbstractNode
+    public class NumberNode : AbstractNode
     {
         private int _number;
+
+        public override string Name
+        {
+            get { return "NUMBER"; }
+        }
+
+        public NumberNode(string intNumber)
+        {
+            _number = Int32.Parse(intNumber);
+        }
 
         public int GetNumber
         {
             get { return _number; }
         }
 
-        public Number(string intNumber)
+        public override void Accept(IVisitor visitor)
         {
-            _number = Int32.Parse(intNumber);
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return "" + _number;
         }
     }
 
