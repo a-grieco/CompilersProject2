@@ -28,11 +28,6 @@ namespace ASTBuilder
             return mod;
         }
 
-        public static AbstractNode GetIdentifier(string id)
-        {
-            return new IdentifierNode(id);
-        }
-
         public static AbstractNode MakeClassBody()
         {
             return new ClassBodyNode(null);
@@ -55,13 +50,6 @@ namespace ASTBuilder
             return fieldDecls;
         }
 
-        public static AbstractNode MakeFieldDeclaration(AbstractNode node)
-        {
-            return new FieldDeclarationNode(node, node.whatAmI());
-
-            // TODO: add the switch once node types are created
-        }
-
         public static AbstractNode MakeStructDecl(AbstractNode modifiers, AbstractNode identifier, AbstractNode classBody)
         {
             return new StructDeclNode(modifiers, identifier, classBody);
@@ -74,16 +62,6 @@ namespace ASTBuilder
                 fieldVariableDeclarators);
         }
 
-        public static AbstractNode MakeTypeSpecifier(AbstractNode node)
-        {
-            return new TypeSpecifierNode(node); // node = TypeNameNode or ArraySpecifierNode
-        }
-
-        public static AbstractNode MakeTypeName(AbstractNode node)
-        {
-            return new TypeNameNode(node);  // PrimitiveType or QualifiedName
-        }
-
         public static AbstractNode MakeArraySpecifier(AbstractNode typeName)
         {
             return new ArraySpecifierNode(typeName);
@@ -93,11 +71,6 @@ namespace ASTBuilder
         public static AbstractNode MakePrimitiveType(PrimitiveEnums primType)
         {
             return new PrimitiveTypeNode(primType); // BOOLEAN, INT, or VOID
-        }
-
-        public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDeclName)
-        {
-            return new FieldVariableDeclaratorsNode(fieldVarDeclName);
         }
 
         public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDecls, AbstractNode fieldVarDeclName)
@@ -112,20 +85,10 @@ namespace ASTBuilder
             return new MethodDeclarationNode(modifiers, typeSpecifier, methodDeclarator, methodBody);
         }
 
-        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName)
-        {
-            return new MethodDeclaratorNode(methodDeclName, null);
-        }
-
         public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName,
             AbstractNode parameterList)
         {
             return new MethodDeclaratorNode(methodDeclName, parameterList);
-        }
-
-        public static AbstractNode MakeParameterList(AbstractNode parameter)
-        {
-            return new ParameterListNode(parameter);
         }
 
         public static AbstractNode MakeParameterList(AbstractNode parameterList, AbstractNode parameter)
@@ -152,32 +115,6 @@ namespace ASTBuilder
             return qualifiedName;
         }
 
-        public static AbstractNode MakeDeclaratorName(AbstractNode identifier)
-        {
-            return new DeclaratorNameNode(identifier);
-        }
-
-        // TODO: may want to nix these specialized declarator name nodes in the AST
-        public static AbstractNode MakeMethodDeclaratorName(AbstractNode identifier)
-        {
-            return new MethodDeclaratorNameNode(identifier);
-        }
-
-        public static AbstractNode MakeFieldVariableDeclaratorName(AbstractNode identifier)
-        {
-            return new FieldVariableDeclaratorNameNode(identifier);
-        }
-
-        public static AbstractNode MakeLocalVariableDeclaratorName(AbstractNode identifier)
-        {
-            return new LocalVariableDeclaratorNameNode(identifier);
-        }
-
-        public static AbstractNode MakeMethodBody(AbstractNode body)
-        {
-            return new MethodBodyNode(body);
-        }
-
         public static AbstractNode MakeConstructorDeclaration(AbstractNode modifiers,
             AbstractNode methodDeclarator, AbstractNode block)
         {
@@ -192,6 +129,11 @@ namespace ASTBuilder
         public static AbstractNode MakeBlock()
         {
             return new BlockNode(null);
+        }
+
+        public static AbstractNode GetIdentifier(string id)
+        {
+            return new IdentifierNode(id);
         }
 
         public static AbstractNode MakeBlock(AbstractNode localVarDeclsAndStmnts)
@@ -209,11 +151,6 @@ namespace ASTBuilder
         {
             ((LocalVariableDeclarationsAndStatementsNode)locVarDeclAndStmnt).AddLocalVariableDeclOrStmnt(locVarDeclOrStmnt);
             return locVarDeclAndStmnt;
-        }
-
-        public static AbstractNode MakeLocalVariableDeclarationOrStatement(AbstractNode node)
-        {
-            return new LocalVariableDeclarationOrStatementNode(node);   // LocalVariableDeclarationStatment or Statment
         }
 
         public static AbstractNode MakeLocalVariableDeclarationStatement
@@ -240,19 +177,9 @@ namespace ASTBuilder
             return localVarDecls;
         }
 
-        public static AbstractNode MakeStatement(AbstractNode node)
-        {
-            return new StatementNode(node); // EmptyStatement, ExpressionStatement, SelectionStatement, IterationStatement, ReturnStatement, Block
-        }
-
         public static AbstractNode MakeEmptyStatement(Token semicolon)
         {
             return new EmptyStatementNode(semicolon);
-        }
-
-        public static AbstractNode MakeExpressionStatement(AbstractNode expression)
-        {
-            return new ExpressionStatementNode(expression);
         }
 
         public static AbstractNode MakeSelectionStatement(AbstractNode ifExpression,
@@ -310,10 +237,6 @@ namespace ASTBuilder
             EQUALS, OP_LOR, OP_LAND, PIPE, HAT, AND, OP_EQ, OP_NE, OP_GT, OP_LT,
             OP_LE, OP_GE, PLUSOP, MINUSOP, ASTERISK, RSLASH, PERCENT, UNARY
         }
-        public static AbstractNode MakeExpression(AbstractNode primaryExpression)
-        {
-            return new ExpressionNode(primaryExpression);
-        }
 
         public static AbstractNode MakeExpression(AbstractNode lhs, ExpressionEnums op, AbstractNode rhs)
         {
@@ -329,6 +252,116 @@ namespace ASTBuilder
         public static AbstractNode GetArithmeticUnaryOperator(ExpressionEnums op)
         {
             return new ArithmeticUnaryOperator(op);
+        }
+
+        public static AbstractNode GetNumber(string intNumber)
+        {
+            return new NumberNode(intNumber);
+        }
+
+        public static AbstractNode MakeFieldAccess(AbstractNode notJustName, AbstractNode identifer)
+        {
+            return new FieldAccessNode(notJustName, identifer);
+        }
+
+        public static AbstractNode MakeMethodCall(AbstractNode methodReference)
+        {
+            return new MethodCallNode(methodReference);
+        }
+
+        public static AbstractNode MakeMethodCall(AbstractNode methodReference, AbstractNode argumentList)
+        {
+            return new MethodCallNode(methodReference, argumentList);
+        }
+
+        public static AbstractNode GetSpecialName(string specialName)
+        {
+            return new SpecialNameNode(specialName);
+        }
+
+        public static AbstractNode GetLiteral(string literal)
+        {
+            return new LiteralNode(literal);
+        }
+
+
+
+
+        #region Unused AST refactoring
+
+        public static AbstractNode MakeFieldDeclaration(AbstractNode node)
+        {
+            return new FieldDeclarationNode(node, node.whatAmI());
+        }
+
+        public static AbstractNode MakeTypeSpecifier(AbstractNode node)
+        {
+            return new TypeSpecifierNode(node); // node = TypeNameNode or ArraySpecifierNode
+        }
+
+        public static AbstractNode MakeTypeName(AbstractNode node)
+        {
+            return new TypeNameNode(node);  // PrimitiveType or QualifiedName
+        }
+
+        public static AbstractNode MakeFieldVariableDeclarators(AbstractNode fieldVarDeclName)
+        {
+            return new FieldVariableDeclaratorsNode(fieldVarDeclName);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclarationOrStatement(AbstractNode node)
+        {
+            return new LocalVariableDeclarationOrStatementNode(node);   // LocalVariableDeclarationStatment or Statment
+        }
+
+        public static AbstractNode MakeMethodDeclarator(AbstractNode methodDeclName)
+        {
+            return new MethodDeclaratorNode(methodDeclName, null);
+        }
+
+        public static AbstractNode MakeParameterList(AbstractNode parameter)
+        {
+            return new ParameterListNode(parameter);
+        }
+
+        public static AbstractNode MakeDeclaratorName(AbstractNode identifier)
+        {
+            return new DeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeMethodDeclaratorName(AbstractNode identifier)
+        {
+            return new MethodDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeFieldVariableDeclaratorName(AbstractNode identifier)
+        {
+            return new FieldVariableDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeLocalVariableDeclaratorName(AbstractNode identifier)
+        {
+            return new LocalVariableDeclaratorNameNode(identifier);
+        }
+
+        public static AbstractNode MakeMethodBody(AbstractNode body)
+        {
+            return new MethodBodyNode(body);
+        }
+
+        public static AbstractNode MakeStatement(AbstractNode node)
+        {
+            return new StatementNode(node); // EmptyStatement, ExpressionStatement, SelectionStatement, IterationStatement, ReturnStatement, Block
+        }
+
+        public static AbstractNode MakeExpressionStatement(AbstractNode expression)
+        {
+            return new ExpressionStatementNode(expression);
+        }
+
+        public static AbstractNode MakeExpression(AbstractNode primaryExpression)
+        {
+            return new ExpressionNode(primaryExpression);
         }
 
         public static AbstractNode MakePrimaryExpression(AbstractNode node)
@@ -364,65 +397,11 @@ namespace ASTBuilder
             // FieldAccess, MethodCall
         }
 
-        public static AbstractNode GetNumber(string intNumber)
-        {
-            return new NumberNode(intNumber);
-        }
-
-        public static AbstractNode MakeFieldAccess(AbstractNode notJustName, AbstractNode identifer)
-        {
-            return new FieldAccessNode(notJustName, identifer);
-        }
-
-        public static AbstractNode MakeMethodCall(AbstractNode methodReference)
-        {
-            return new MethodCallNode(methodReference);
-        }
-
-        public static AbstractNode MakeMethodCall(AbstractNode methodReference, AbstractNode argumentList)
-        {
-            return new MethodCallNode(methodReference, argumentList);
-        }
-
         public static AbstractNode MakeMethodReference(AbstractNode node)
         {
             return new MethodReferenceNode(node);   // ComplexPrimaryNoParenthesis,
                                                     // QualifiedName, SpecialName
         }
-
-        public static AbstractNode GetSpecialName(string specialName)
-        {
-            return new SpecialNameNode(specialName);
-        }
-
-        public static AbstractNode GetLiteral(string literal)
-        {
-            return new LiteralNode(literal);
-        }
-    }
-
-    public class LiteralNode : AbstractNode
-    {
-        private string _literal;
-
-        public override string Name
-        {
-            get { return "LITERAL"; }
-        }
-
-        public LiteralNode(string literal)
-        {
-            _literal = literal;
-        }
-
-        public override void Accept(IVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        public override string ToString()
-        {
-            return _literal;
-        }
+        #endregion
     }
 }

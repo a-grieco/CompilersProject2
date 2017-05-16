@@ -1,7 +1,4 @@
-﻿/* using as reference:
- * https://www.codeproject.com/Articles/588882/TheplusVisitorplusPatternplusExplained */
-
-using System;
+﻿using System;
 
 namespace ASTBuilder
 {
@@ -24,7 +21,7 @@ namespace ASTBuilder
         public void Visit(IdentifierNode idNode)
         {
             Console.Write(idNode.Name + ": ");
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(idNode.ID);
             Console.ResetColor();
         }
@@ -49,23 +46,11 @@ namespace ASTBuilder
         {
             Console.Write(expNode.Name + ": ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(expNode);
+            Console.Write(expNode);
             Console.ResetColor();
-        }
-
-        public void Visit(ComplexPrimaryNoParenthesisNode cpnpNode)
-        {
-            if (cpnpNode.IsTerminal)
-            {
-                Console.Write(cpnpNode.Name + ": ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(cpnpNode);
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.WriteLine("***fix this***");
-            }
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(" [" + expNode.OpSymbol + "]");
+            Console.ResetColor();
         }
 
         public void Visit(SpecialNameNode snNode)
@@ -91,5 +76,20 @@ namespace ASTBuilder
             Console.WriteLine(numNode);
             Console.ResetColor();
         }
+
+        //public void Visit(ComplexPrimaryNoParenthesisNode cpnpNode)
+        //{
+        //    if (cpnpNode.IsTerminal)
+        //    {
+        //        Console.Write(cpnpNode.Name + ": ");
+        //        Console.ForegroundColor = ConsoleColor.Green;
+        //        Console.WriteLine(cpnpNode);
+        //        Console.ResetColor();
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("***fix this***");
+        //    }
+        //}
     }
 }

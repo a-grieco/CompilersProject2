@@ -151,24 +151,6 @@ namespace ASTBuilder
                 adoptChildren(fieldDeclarations);
             }
         }
-        // TODO: delete me
-        //public override string ToString()
-        //{
-        //    string display = "{ ";
-        //    // check that fieldDeclarations is not null
-        //    var child = Child;
-        //    if (child != null)
-        //    {
-        //        var currChild = Child.First;
-        //        while (currChild != null)
-        //        {
-        //            display += currChild + " ";
-        //            currChild = currChild.Sib;
-        //        }
-        //    }
-        //    display += "} ";
-        //    return Name + " " + display;
-        //}
     }
 
     public class FieldDeclarationsNode : AbstractNode
@@ -231,24 +213,6 @@ namespace ASTBuilder
             adoptChildren(typeSpecifier);
             adoptChildren(fieldVariableDeclarators);
         }
-
-        //public override void Accept(IVisitor visitor)
-        //{
-        //    visitor.Visit(this);
-        //}
-
-        //public override string ToString()
-        //{
-        //    string display = "";
-        //    var currChild = Child.First;
-        //    while (currChild != null)
-        //    {
-        //        display += currChild + " ";
-        //        currChild = currChild.Sib;
-        //    }
-        //    display = display.Trim() + "; ";
-        //    return Name + " " + display;
-        //}
     }
 
     public class TypeSpecifierNode : AbstractNode
@@ -536,7 +500,7 @@ namespace ASTBuilder
 
         public override string ToString()
         {
-            return "STATIC";  // TODO: this seems redundant...
+            return "STATIC";
         }
     }
 
@@ -556,7 +520,6 @@ namespace ASTBuilder
         }
     }
 
-    // TODO: verify that this ordering is correct
     public class LocalVariableDeclarationsAndStatementsNode : AbstractNode
     {
         public override string Name
@@ -642,7 +605,6 @@ namespace ASTBuilder
 
     public class EmptyStatementNode : AbstractNode
     {
-        // TODO: this seems unnecessary
         private Token semicolon;
 
         public override string Name
@@ -685,13 +647,6 @@ namespace ASTBuilder
         {
             adoptChildren(ifExpression);
         }
-
-        //public SelectionStatementNode(AbstractNode ifExpression, AbstractNode statementIf, AbstractNode statementElse)
-        //{
-        //    adoptChildren(ifExpression);
-        //    adoptChildren(statementIf);
-        //    adoptChildren(statementElse);
-        //}
 
         public void AddStatement(AbstractNode thenStatement)
         {
@@ -783,6 +738,52 @@ namespace ASTBuilder
             get { return "Expression"; }
         }
 
+        public string OpSymbol
+        {
+            get
+            {
+                switch (_op)
+                {
+                    case TCCLParser.ExpressionEnums.EQUALS:
+                        return "=";
+                    case TCCLParser.ExpressionEnums.OP_LOR:
+                        return "||";
+                    case TCCLParser.ExpressionEnums.OP_LAND:
+                        return "&&";
+                    case TCCLParser.ExpressionEnums.PIPE:
+                        return "|";
+                    case TCCLParser.ExpressionEnums.HAT:
+                        return "^";
+                    case TCCLParser.ExpressionEnums.AND:
+                        return "&";
+                    case TCCLParser.ExpressionEnums.OP_EQ:
+                        return "==";
+                    case TCCLParser.ExpressionEnums.OP_NE:
+                        return "!=";
+                    case TCCLParser.ExpressionEnums.OP_GT:
+                        return ">";
+                    case TCCLParser.ExpressionEnums.OP_LT:
+                        return "<";
+                    case TCCLParser.ExpressionEnums.OP_LE:
+                        return "<=";
+                    case TCCLParser.ExpressionEnums.OP_GE:
+                        return ">=";
+                    case TCCLParser.ExpressionEnums.PLUSOP:
+                        return "+";
+                    case TCCLParser.ExpressionEnums.MINUSOP:
+                        return "-";
+                    case TCCLParser.ExpressionEnums.ASTERISK:
+                        return "*";
+                    case TCCLParser.ExpressionEnums.RSLASH:
+                        return "/";
+                    case TCCLParser.ExpressionEnums.PERCENT:
+                        return "%";
+                    default:
+                        return "";
+                }
+            }
+        }
+
         public ExpressionNode(AbstractNode primaryExpression)
         {
             adoptChildren(primaryExpression);
@@ -795,7 +796,6 @@ namespace ASTBuilder
             adoptChildren(rhs);
         }
 
-        // TODO: fix me (_precision may break, and arithmeticUnaryOperator should be a member, not a child
         public ExpressionNode(AbstractNode arithmeticUnaryOperator, AbstractNode expression,
             string prec, TCCLParser.ExpressionEnums op)
         {
@@ -816,10 +816,10 @@ namespace ASTBuilder
             switch (_arithmeticUnaryOperator)
             {
                 case TCCLParser.ExpressionEnums.PLUSOP:
-                    display += "+ ";
+                    display += "PLUSOP ";
                     break;
                 case TCCLParser.ExpressionEnums.MINUSOP:
-                    display += "- ";
+                    display += "MINUSOP ";
                     break;
             }
             switch (_op)
@@ -1105,6 +1105,31 @@ namespace ASTBuilder
         public override string ToString()
         {
             return _specialName;
+        }
+    }
+
+    public class LiteralNode : AbstractNode
+    {
+        private string _literal;
+
+        public override string Name
+        {
+            get { return "LITERAL"; }
+        }
+
+        public LiteralNode(string literal)
+        {
+            _literal = literal;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return _literal;
         }
     }
 }

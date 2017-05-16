@@ -15,11 +15,6 @@ namespace ASTBuilder
         {
             var parser = new TCCLParser();
 
-            var name = "good1p.txt";
-            Console.WriteLine("Parsing file " + name);
-            parser.Parse(name);
-            Console.WriteLine("Parsing complete\n");
-
             bool notQuit = true;
             string fileName = "";
 
@@ -69,7 +64,7 @@ namespace ASTBuilder
             }
 
             Console.WriteLine("\nProgram complete. Press any key to close.");
-            //Console.ReadKey();    // TODO: uncomment this
+            Console.ReadKey(); 
         }
     }
 }
